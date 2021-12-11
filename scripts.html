@@ -14,7 +14,7 @@
   //   }
 
   //   function catchCheck(record) {
-  //     console.log('val at catchCheck:', record);
+  //   //     console.log('val at catchCheck:', record);
   //     updateLogEntryCache(record);
   //   }
 
@@ -39,7 +39,7 @@
     $("body").on("click tap", ".setStudent", function (event) {
       event.preventDefault();
       var id = $(this).attr("data-stuId");
-      console.log('id = %s', id);
+      //       console.log('id = %s', id);
       focus(id);
     });
 
@@ -128,6 +128,10 @@
 
 
     // modals
+    $("body").on("show.srchModal.modal", function () {
+
+    });
+
     $("body").on("show.bs.modal", function () {
       // alert('event');
       var addresses = ($("#teachemail").val() + ',' + $("#Parent_1_Email").val() + ',' + $("#u3_Parent_1a_Email").val()).replace(/,$/, "");
@@ -136,7 +140,6 @@
       $("#emailRecipients").val(addresses);
       $("#emailSubject").val(subject);
     });
-
     // change the cursor to a pointer when entering a text Blaze field
     $("body").on("mouseenter", '[name$="Copy"]', function () {
       $("[name$='Copy']").css("cursor", "pointer");
@@ -272,8 +275,8 @@
         .withSuccessHandler(reloadMe)
         .updateRoster();
     });
-    $("body").on("click", ".toBtn", function () {
-      $("#toModal").modal("hide");
+    $("body").on("click", "#search", function () {
+      $("#srchModal").modal("show");
       if ($(this).val() !== "Cancel") {
         if ($(this).val() == "Yes") {
           var tem = $("#teachemail").val() + ", dpaight@hemetusd.org";
@@ -298,7 +301,7 @@
       e.preventDefault();
       // open goal for editing
       var log_entry_id = $(this).data("entry_id");
-      console.log('log entry id is %s', log_entry_id);
+      //       console.log('log entry id is %s', log_entry_id);
       google.script.run
         .withSuccessHandler(editLogEntryInModal)
         .getLogEntry(log_entry_id);
@@ -308,14 +311,17 @@
       e.preventDefault();
       // open goal for editing
       var log_entry_id = $(this).data("entry_id");
-      console.log('log entry id is %s', log_entry_id);
+      //       console.log('log entry id is %s', log_entry_id);
       google.script.run
         .withSuccessHandler(editLogEntryInModal)
         .getLogEntry(log_entry_id);
     });
 
-    $("body").on("click", ".teachEmail", function () {
-      var address = emLookup()
+    $("body").on("click", ".sendEmail", function () {
+      //       console.log('seis_id is ', $("#seis_id").val());
+      var emadr = $("#teach_email").val();
+      //       console.log('email address is: %s', emadr);
+
     });
 
     startup();
@@ -328,13 +334,14 @@
   function startup(id) {
     $('#spinner01').show();
     id = getPointer();
-    if (id == undefined) {
+    if (id == undefined || id == null) {
       google.script.run
         .withSuccessHandler(setPointerAndStart)
         .getFirstPointer();
     } else {
       // contactInfo(id);
-      console.log('current id at startup is %s', id);
+      // focus(id);
+      // console.log('current id at startup is %s', id);
 
       document.body.style.cursor = "wait";
       google.script.run
@@ -345,9 +352,14 @@
     }
     function setPointerAndStart(id) {
       setPointer(id);
-      console.log('setPointerAndStart ran');
+      //       console.log('setPointerAndStart ran');
       // await sleep(2000);
-      startup(id);
+      document.body.style.cursor = "wait";
+      google.script.run
+        .withSuccessHandler(showRosterTable)
+        .getTableData_roster(id);
+
+      focus(id);
     }
 
   }
@@ -384,9 +396,13 @@
     focus();
   }
 
-  function contactInfo(id = getPointer()) {
-
-    console.log("id = %s", id);
+  function contactInfo(id) {
+    if (!id) {
+      id = google.script.run
+        .withSuccessHandler(contactInfo)
+        .getFirstPointer();
+    }
+    // console.log("id = %s", id);
     sessionStorage.setItem("lastId", id);
 
     if (sessionStorage.getItem("rec" + id) != null) {
@@ -494,25 +510,33 @@
   // that display data retrieved from a script run on the server
   function showContactInfo(record) {
     if (typeof record == 'string') {
-      console.log('parsed json');
+      //       console.log('parsed json');
       record = JSON.parse(record);
     }
+    //     console.log('record: %s', JSON.stringify(record));
+
     var [
-      seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_email, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+      seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals
     ] = record;
 
-    // console.log('record: %s', JSON.stringify(record));
+    //     console.log('record: %s', JSON.stringify(record));
+
+
     var key = seis_id;
     sessionStorage.key = JSON.stringify(record);
 
+
     $("#langflu").val(langflu);
     $("#corrlng").val(corrlng);
+    $("#gradeCode").val(grade_code);
     $("#stuName").val(first_name + ' ' + last_name);
     $("#namenav").text(first_name + ' ' + last_name);
     $("#dob").val(moment(date_of_birth).format("MM-DD-YYYY"));
     $("#parent_guardian_1_name").val(parent_guardian_1_name);
-    $("#parent_1_home_phone").val(parent_1_home_phone);
-    $("#u1_phone").val(u1_phone);
+    $("#parent_1_home_phone").attr("title", "cell/home");
+    $("#parent_1_home_phone").val(phoneFmt(parent_1_cell_phone) + phoneFmt(parent_1_home_phone));
+    $("#u1_phone").attr("title", "work/other");
+    $("#u1_phone").val(phoneFmt(parent_1_work_phone_h1) + phoneFmt(parent_1_other_phone));
     $("#parent_1_email").val(parent_1_email);
     $("#u3_parent_1a_email").val(u3_parent_1a_email);
     $("#sex").val(gender.toString()[0]);
@@ -521,6 +545,7 @@
     $("#seis_id").val(seis_id);
     $("#stuemail").val((first_name[0] + last_name[0] + student_id + "@stu.hemetusd.org").toLowerCase());
     $("#notes").val(notes);
+    $("#teach_email").val(teachemail);
 
     if ($("#corrlng").val() == 1) {
       $("#corrlng").css("background-color", "#FF0000");
@@ -531,6 +556,18 @@
       $("#corrlng").css("color", "#000000");
     }
 
+  }
+  function phoneFmt(phone) {
+    if (phone == null || phone == undefined || phone == "") {
+      return "";
+    }
+
+    phone = phone.toString().replace(/[^0-9]/g, '');
+    return phone.substr(0, 3) +
+      "-" +
+      phone.substr(3, 3) +
+      "-" +
+      phone.substr(6,) + " ; ";
   }
 
   function sndEm(buttonVal) {
@@ -615,7 +652,7 @@
   // this is a bit of code I stole from w3 schools; works great!; 
   // together with the code in the HTML file, this allows sorting by columns when the headings are clicked
   function sortTable(t_id, n) {
-    console.log('sortTable args = %s, %s', t_id, n);
+    //     console.log('sortTable args = %s, %s', t_id, n);
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById("rosterList");
     switching = true;
@@ -689,8 +726,8 @@
     // $('#spinner02').hide();
   }
   function filterLogEntriesByDateWindow() {
-    console.log('fired');
-    console.log('current start date: %s; end date: %s', $('#stDtEdit').val(), $('#endDtEdit').val());
+    //     console.log('fired');
+    //     console.log('current start date: %s; end date: %s', $('#stDtEdit').val(), $('#endDtEdit').val());
     var logEntries = JSON.parse(sessionStorage.getItem('reclog' + $('#seis_id').val()));
     var keepers = [];
     for (let i = 0; i < logEntries.length; i++) {
@@ -698,7 +735,7 @@
       var start = moment($('#stDtEdit').val());
       var end = moment($('#endDtEdit').val());
       if (moment(el[0]).isBefore(end.add(1, 'd')) && moment(el[0]).isAfter(start)) {
-        console.log('%s is before %s', moment(el[0]).format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+        //         console.log('%s is before %s', moment(el[0]).format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
         keepers.push(el);
       }
     }
@@ -707,8 +744,8 @@
   }
   function showLog(logEntries, loc) { // [entries, id]
     // input is an array containing one arrays and one string ('loc'): array contains all the log entries that correspond to that record
-    console.log('in "showLog" the first log entry is: %s; the loc is %s', JSON.stringify(logEntries[0]), loc);
-    console.log('logEntries is a type of %s', typeof logEntries);
+    //     console.log('in "showLog" the first log entry is: %s; the loc is %s', JSON.stringify(logEntries[0]), loc);
+    //     console.log('logEntries is a type of %s', typeof logEntries);
     if (typeof logEntries == 'string') {
       logEntries = JSON.parse(logEntries);
     }
@@ -792,9 +829,9 @@
     for (let i = 0; i < data.length; i++) {
       const el = data[i];
       var [
-        seis_id, last_name, first_name, date_of_birth, gender, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_email, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, nmjdob
+        seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_email, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals
       ] = el;
-      console.log(JSON.stringify(el));
+      //       console.log(JSON.stringify(el));
       list = $("#" + loc + "tb");
 
       if (!seis_id) {
@@ -867,7 +904,7 @@
     document.body.style.cursor = "default";
   }
   function showTBsnippet(snippet) {
-    console.log('snippet is: %s', JSON.stringify(snippet));
+    //     console.log('snippet is: %s', JSON.stringify(snippet));
 
     $("#tbSnippetCopy").text(snippet);
     $("#tbSnippetCopy").select();
@@ -916,7 +953,7 @@
       snip = snip.toString() + levelsSnip.toString();
     }
     // copy the whole thing to the clipboard
-    console.log('snip is: %s', JSON.stringify(snip));
+    //     console.log('snip is: %s', JSON.stringify(snip));
     copyToClipboard(snip);
   };
   function copyToClipboard(content) {
@@ -1034,7 +1071,13 @@
 
 
   function getPointer() {
+    if (sessionStorage.getItem('lastId') == null) {
+      google.script.run
+        .withSuccessHandler(getPointer)
+        .getFirstPointer()
+    };
     return sessionStorage.getItem('lastId');
+
   }
   function setPointer(id) {
     sessionStorage.setItem('lastId', id);
@@ -1044,7 +1087,7 @@
 
   function editLogEntryInModal(logEntry) {
     logEntry = JSON.parse(logEntry);
-    console.log('the log record is %s', JSON.stringify(logEntry));
+    //     console.log('the log record is %s', JSON.stringify(logEntry));
     $('#logEntryModal').modal({ focus: true });
     $('#lelog_entry_id').val(logEntry.log_entry_id);
     $('#leEntry').val(logEntry.entry);
@@ -1059,14 +1102,14 @@
     obj.letimestamp = moment($('#timestamp').val(), 'YYYY-MM-DDTHH:mm:ss.SSSZ').format('YYYY-MM-DDTHH:mm:ss.SSSZ');
     obj.delete = (option != -1) ? false : true;
     obj.seis_id = $("#seis_id").val();
-    console.log('the obj sent to saveEdidedLogEntry is %s', JSON.stringify(obj));
+    //     console.log('the obj sent to saveEdidedLogEntry is %s', JSON.stringify(obj));
     google.script.run
       .withSuccessHandler(saveLogEntrySuccess)
       .saveEditedLogEntry(obj);
 
   }
   function updateLogEntryCache(record) {
-    console.log('record is %s', record);
+    //     console.log('record is %s', record);
     record = JSON.parse(record);
     for (let i = 0; i < record.length; i++) {
       const el = record[i];
@@ -1104,7 +1147,7 @@
   }
   function deleteRecordConfirmed() {
     var id = $("#seis_id").val();
-    console.log('the id to delete is %s', id);
+    //     console.log('the id to delete is %s', id);
     google.script.run
       .withSuccessHandler(reloadMe) // reload
       .withFailureHandler()

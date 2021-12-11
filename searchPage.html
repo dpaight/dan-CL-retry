@@ -1,0 +1,112 @@
+<div class="card-body">
+    <div id="s_stuData">
+      <form>
+        <div class="form-row align-items-center">
+
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text   col-12" id="s_stuName-pre">Name</span>
+            </div>
+            <input type="text" class="form-control" id="s_stuName" style="font-size: large; font-weight: bold;"
+              value="">
+          </div>
+
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_dob-pre">DOB </span>
+            </div>
+            <input type="text" class="form-control spr col-5" id="s_dob" read-only value="">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_sex-pre">Sex </span>
+            </div>
+            <input type="text" class="form-control spr col-3" id="s_sex" read-only value="">
+
+          </div>
+
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_tch-pre">Teacher</span>
+
+            </div>
+            <input type="text" class="form-control spr" id="s_teachname" read-only value="">
+            <input type="text" class="form-control spr" id="s_teach_email" read-only value="" hidden>
+          </div>
+
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_corrlng-pre">CrLng</span>
+            </div>
+            <input type="text" class="form-control col-2 spr" id="s_corrlng" value="">
+            <div class="input-group-prepend">
+              <span class="input-group-text  " id="s_lang-pre">Lang</span>
+            </div>
+            <input type="text" class="form-control col-2 spr" id="s_langflu" value="">
+            <div class="input-group-prepend">
+              <span class="input-group-text  " id="s_lang-pre">Grade</span>
+            </div>
+            <input type="text" class="form-control col-2 spr" id="s_gradeCode" value="">
+          </div>
+
+        </div>
+
+        <div class="form-row align-items-center">
+          <div class="input-group input-group-sm m-1 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text  " id="s_seis_id-pre">ID(SEIS) </span>
+            </div>
+            <input type="text" class="form-control spr" id="s_seis_id" value="">
+          </div>
+        </div>
+        <div class="form-row align-items-center">
+          <div class="input-group input-group-sm m-1  mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text  " id="s_stuem-pre">StuEM</span>
+            </div>
+            <input type="text" class="form-control spr" id="s_stuemail" value="">
+          </div>
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_parent_guardian_1_name-pre">Parents </span>
+            </div>
+            <input type="text" class="form-control spr" id="s_parent_guardian_1_name" value="">
+          </div>
+
+        </div>
+        <div class="form-row align-items-center">
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text  " id="s_parent_1_Home_Phone-pre">PH1</span>
+            </div>
+            <input type="text" class="form-control editable spr" id="s_parent_1_home_phone" value="">
+            <div class="input-group-prepend">
+              <span class="input-group-text  " id="s_phone-pre2">PH2 </span>
+            </div>
+            <input type="text" class="form-control editable spr" id="s_u1_phone" value="">
+          </div>
+        </div>
+
+        <div class="form-row align-items-center">
+          <div class="input-group input-group-sm m-1 col-12 mb-3">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_mai-pre">EM1</span>
+            </div>
+            <input type="text" class="form-control editable spr" id="s_parent_1_email" value="">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="s_mail2-pre">EM2</span>
+            </div>
+            <input type="text" class="form-control editable spr" id="s_u3_parent_1a_email" value="">
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="card-footer p-1">
+      <!-- <p style="margin: 5px;">Notes</p>
+      <textarea name="notes" class="spr" id="s_notes" cols="40" rows="6"
+        style="margin-top: 0px; width: 100%; height: 130px"></textarea> -->
+      <button class="btn btn-sm btn-success" onclick="openAddStudentModal()" style="font-weight: bold;">+
+        STUDENT</button>
+    </div>
+  </div>

@@ -4,10 +4,13 @@ var roster = ss.getSheetByName('roster');
 function allPupilsSheet() {
     var ss2 = SpreadsheetApp.openById("1HoulMp8RlpCxvN4qf10TbxW1vzxzTjbA8xKhFjRdZY8");
     return ss2;
-  }
+}
 var fname = 'arguments.callee.toString().match(/function ([^\(]+)/)[1]';
 // @ts-ignore
 var moment = Moment.load();
+function getInitialId() {
+    return ss.getSheetByName('roster').getRange('A3').getValue().toString();
+}
 function sendLevelsForm(stuName, stuId, teachemail) {
     Logger.log('stuName: %s, stuId: %s, teachemail: %s', stuName, stuId, teachemail);
     // stuName = 'Wanda Wanderer', stuId = 'WandererWanda123456', teachemail = 'dpaight@hemetusd.org';
@@ -60,10 +63,10 @@ function sendLevelsForm(stuName, stuId, teachemail) {
 //     return id;
 // }
 function doGet(e) {
-    ss.getSheetByName('roster').sort(1);
+    ss.getSheetByName('roster').sort(2);
     ss.getSheetByName('logRespMerged').sort(1);
     var t = HtmlService.createTemplateFromFile("caseLog");
-    t.version = "v3.2";
+    t.version = "v3.5";
     return t.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 function getScriptURL() {
@@ -75,12 +78,12 @@ function doPost(e) {
     var body = JSON.parse(e.postData.contents);
     //Adding a new row with content from the request body
     sheet.appendRow([body.id,
-        body.date_created,
-        body.first_name,
-        body.shipping.address,
-        body.shipping.phone,
-        body.billing.phone,
-        body.billing.postcode
+    body.date_created,
+    body.first_name,
+    body.shipping.address,
+    body.shipping.phone,
+    body.billing.phone,
+    body.billing.postcode
     ]);
 }
 // script and CSS files have to be stored in HTML files for Google app script
@@ -426,8 +429,8 @@ function createDraftEmail(buttonVal, paramsJSN) {
     }
     else {
         GmailApp.createDraft(params.to, params.subj, params.body, {
-        // @ts-ignore
-        // attachments: [file.getAs(MimeType.PDF), file2.getAs(MimeType.PDF)]
+            // @ts-ignore
+            // attachments: [file.getAs(MimeType.PDF), file2.getAs(MimeType.PDF)]
         });
     }
     return params.body.toString();
@@ -1394,10 +1397,11 @@ function addTask0(taskListId) {
     };
 }
 function getFirstPointer() {
-    var last = ss.getSheetByName('roster').getRange('A1:A').getValues().filter(String).length;
-    var idList = ss.getSheetByName('roster').getRange('J2:J' + (last + 1)).getDisplayValues().flat();
-    Logger.log(JSON.stringify(idList[0]));
-    return idList[0];
+    var [headings, values, sheet, range, lastR, lastC] = get('roster', 1, true);
+    values.shift();
+//     console.log('getting first pointer; the values array is: %s', JSON.stringify(values));
+    Logger.log(values[0]);
+    return values[0];
 }
 function getLogEntries(id = '1010101', loc = null, startDate, endDate) {
     var [headings, ids, sheet, range, lastR, lastC] = get('roster', 1, true);
@@ -1521,20 +1525,26 @@ function cacheLogEntry(recordJSN) {
     var entries = JSON.parse(sp.getProperty("newRecord"));
     entries.unshift(JSON.parse(recordJSN));
     sp.setProperty('newRecord', JSON.stringify(entries));
-    console.log('newRecord is %s: ', sp.getProperty("newRecord"));
+//     console.log('newRecord is %s: ', sp.getProperty("newRecord"));
 }
 function checkForNewLogEntryRecordInCache() {
     var sp = PropertiesService.getScriptProperties();
     var record = sp.getProperty("newRecord");
     Logger.log('record is %s', record);
-    if (record == null) {
-        throw "no records in properties";
+    try {
+        if (record !== null) {
+            sp.deleteProperty('newRecord');
+            return record;
+        } else {
+          throw "error";
+        }
     }
-    else {
-        sp.deleteProperty('newRecord');
-        return record;
+    catch {
+        Logger.log('caught');
+        return;
     }
 }
+
 function getCachedLogs() {
     var sp = PropertiesService.getScriptProperties();
     var records = [];
@@ -1642,16 +1652,16 @@ function importXLS_2() {
     SpreadsheetApp.flush();
     destRange.setValues(newData);
     var headersAndFormulas = [[
-            '=ArrayFormula(iferror(vlookup($M1:$M, teacherCodes!$B$1:$H, 7,false),if(row($M1:$M) = 1, "teachEmail","")))	',
-            '=ArrayFormula(iferror(vlookup($M1:$M,{teacherCodes!$B$1:$I34 }, 8,false),if(row($M$1:$M) = 1,"teachName","")))	',
-            '=ArrayFormula(if(row($Z$1:$Z) <> 1, if(isBlank($A$1:$A),,if(($M$1:$M = 21) + ($M$1:$M = 100) + ($M$1:$M = 105) + sum($S$1:$S = "X") > 0, 1, 0)),"sdc||rsp"))	',
-            '=ArrayFormula(if(row(A1:A)=1,"nmJdob",regexreplace(if(isblank(A1:A),, REGEXREPLACE(C1:C & D1:D, "[ \'-]", "") & right(year(G1:G),2) & days(\"12/31/\"&(year(G1:G)-1), G1:G)),"-","")))',
-            '=ArrayFormula(if(isblank(id),, regexreplace(C1:C & "_" & firstName & "_" & A1:A, "[ \'-]", "")))',
-            '=ArrayFormula(if(isblank(id),, REGEXREPLACE(C1:C & "_" & firstName & "_dob_" & dob, "[ \'-]", "")))',
-            '=ArrayFormula(if(isblank(id),, REGEXREPLACE(C1:C & "_" & firstName, "[ \'-]", "")))',
-            '=ArrayFormula(if(isblank(id),, REGEXREPLACE(D1:D & "_" & lastName, "[ \'-]", "")))',
-            '=ARRAYFORMULA((H1:H)&", "&(V1:V))'
-        ]];
+        '=ArrayFormula(iferror(vlookup($M1:$M, teacherCodes!$B$1:$H, 7,false),if(row($M1:$M) = 1, "teachEmail","")))	',
+        '=ArrayFormula(iferror(vlookup($M1:$M,{teacherCodes!$B$1:$I34 }, 8,false),if(row($M$1:$M) = 1,"teachName","")))	',
+        '=ArrayFormula(if(row($Z$1:$Z) <> 1, if(isBlank($A$1:$A),,if(($M$1:$M = 21) + ($M$1:$M = 100) + ($M$1:$M = 105) + sum($S$1:$S = "X") > 0, 1, 0)),"sdc||rsp"))	',
+        '=ArrayFormula(if(row(A1:A)=1,"nmJdob",regexreplace(if(isblank(A1:A),, REGEXREPLACE(C1:C & D1:D, "[ \'-]", "") & right(year(G1:G),2) & days(\"12/31/\"&(year(G1:G)-1), G1:G)),"-","")))',
+        '=ArrayFormula(if(isblank(id),, regexreplace(C1:C & "_" & firstName & "_" & A1:A, "[ \'-]", "")))',
+        '=ArrayFormula(if(isblank(id),, REGEXREPLACE(C1:C & "_" & firstName & "_dob_" & dob, "[ \'-]", "")))',
+        '=ArrayFormula(if(isblank(id),, REGEXREPLACE(C1:C & "_" & firstName, "[ \'-]", "")))',
+        '=ArrayFormula(if(isblank(id),, REGEXREPLACE(D1:D & "_" & lastName, "[ \'-]", "")))',
+        '=ARRAYFORMULA((H1:H)&", "&(V1:V))'
+    ]];
     var formulaRng = destSheet.getRange(1, newData[0].length + 1, 1, headersAndFormulas[0].length);
     formulaRng.setFormulas(headersAndFormulas);
     SpreadsheetApp.openById('1Pe-unMy1vkj3joBvGru03YB1W3a35zNn_vXw9eF0KKk').getSheetByName('frequency distribution').getRange("E14").setValue(new Date());
