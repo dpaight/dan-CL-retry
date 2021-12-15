@@ -93,7 +93,10 @@ function include(filename) {
 }
 // takes Data sent from the client side and saves it on the server side spreadsheet;
 // returns id for 'show...' function
-function saveLogEntry(input = ['1010101', 'test entry ' + moment()]) {
+function saveLogEntry(input) {
+    if (input == undefined || input == null || input.length == 0) {
+        Logger.log('input empty');
+    }
     var id = input[0], entry = input[1];
     var [headings, logVals, logResp, range, last, lastC] = get('logRespMerged');
     var log_entry_id = getNextLogEntryId();
@@ -1399,7 +1402,7 @@ function addTask0(taskListId) {
 function getFirstPointer() {
     var [headings, values, sheet, range, lastR, lastC] = get('roster', 1, true);
     values.shift();
-//     console.log('getting first pointer; the values array is: %s', JSON.stringify(values));
+    //     console.log('getting first pointer; the values array is: %s', JSON.stringify(values));
     Logger.log(values[0]);
     return values[0];
 }
@@ -1525,26 +1528,19 @@ function cacheLogEntry(recordJSN) {
     var entries = JSON.parse(sp.getProperty("newRecord"));
     entries.unshift(JSON.parse(recordJSN));
     sp.setProperty('newRecord', JSON.stringify(entries));
-//     console.log('newRecord is %s: ', sp.getProperty("newRecord"));
+    //     console.log('newRecord is %s: ', sp.getProperty("newRecord"));
 }
 function checkForNewLogEntryRecordInCache() {
     var sp = PropertiesService.getScriptProperties();
     var record = sp.getProperty("newRecord");
-    Logger.log('record is %s', record);
-    try {
-        if (record !== null) {
-            sp.deleteProperty('newRecord');
-            return record;
-        } else {
-          throw "error";
-        }
-    }
-    catch {
-        Logger.log('caught');
-        return;
+    if (record == null) {
+        return -1;
+    } else {
+        sp.deleteProperty('newRecord');
+        return record;
+
     }
 }
-
 function getCachedLogs() {
     var sp = PropertiesService.getScriptProperties();
     var records = [];

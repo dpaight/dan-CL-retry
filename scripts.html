@@ -1,37 +1,4 @@
 <script>
-  // var inactivityTime = function () {
-  //   var time;
-  //   document.onload = resetTimer;
-
-  //   document.onmousemove = resetTimer;
-  //   document.onkeydown = resetTimer;
-
-  //   function checkForNewLogEntries() {
-  //     google.script.run
-  //       .withSuccessHandler(catchCheck)
-  //       .withFailureHandler(null)
-  //       .checkForNewLogEntryRecordInCache();
-  //   }
-
-  //   function catchCheck(record) {
-  //   //     console.log('val at catchCheck:', record);
-  //     updateLogEntryCache(record);
-  //   }
-
-  //   function resetTimer() {
-  //     time = setTimeout(checkForNewLogEntries, (5000));
-  //     clearTimeout(time);
-  //     // 1000 milliseconds = 1 second
-  //   }
-  // }
-  // inactivityTime;
-  // //start
-  // window.onload = function () {
-  //     inactivityTime;
-  //   }
-
-  // // end
-
   // The code in this function runs when the page is loaded.
   $(document).ready(function () {
     // click student name in roster table switches to that student for both contact info and
@@ -542,6 +509,9 @@
     $("#sex").val(gender.toString()[0]);
     $("#teachname").val(teacher_name);
     $("#teachemail").val("teachemail");
+    $("#addStr").val(parent_1_mail_address);
+    $("#addCity").val(parent_1_mail_city);
+    $("#addZip").val(parent_1_mail_zip);
     $("#seis_id").val(seis_id);
     $("#stuemail").val((first_name[0] + last_name[0] + student_id + "@stu.hemetusd.org").toLowerCase());
     $("#notes").val(notes);
@@ -1110,7 +1080,12 @@
   }
   function updateLogEntryCache(record) {
     //     console.log('record is %s', record);
-    record = JSON.parse(record);
+    try {
+      record = JSON.parse(record);
+    } catch (error) {
+      console.log('error at updateLogEntryCache: %s', error);
+      return;
+    } 
     for (let i = 0; i < record.length; i++) {
       const el = record[i];
       var id = el[5]

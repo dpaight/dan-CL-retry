@@ -1,0 +1,33 @@
+// var inactivityTime = function () {
+    //   var time;
+    //   document.onload = resetTimer;
+  
+    //   document.onmousemove = resetTimer;
+    //   document.onkeydown = resetTimer;
+  
+    //   function checkForNewLogEntries() {
+    //     google.script.run
+    //       .withSuccessHandler(catchCheck)
+    //       .withFailureHandler(null)
+    //       .checkForNewLogEntryRecordInCache();
+    //   }
+  
+    //   function catchCheck(record) {
+    //   //     console.log('val at catchCheck:', record);
+    //     updateLogEntryCache(record);
+    //   }
+  
+    //   function resetTimer() {
+    //     time = setTimeout(checkForNewLogEntries, (5000));
+    //     clearTimeout(time);
+    //     // 1000 milliseconds = 1 second
+    //   }
+    // }
+    // inactivityTime;
+    // //start
+    // window.onload = function () {
+    //     inactivityTime;
+    //   }
+  
+    // // end
+  

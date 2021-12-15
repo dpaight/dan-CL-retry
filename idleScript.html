@@ -26,8 +26,12 @@
     }
 
     function catchCheck(record) {
-//         console.log('val at catchCheck:', record);
-        updateLogEntryCache(record);
+        //         console.log('val at catchCheck:', record);
+        if (record == -1) {
+            return;
+        } else {
+            updateLogEntryCache(record);
+        }
     }
     function catchFail(error) { };
 
