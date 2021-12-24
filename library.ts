@@ -29,7 +29,9 @@ function get(sheetName, column = -1, flat = false) {
     values = (flat == undefined || flat == false) ?
         range.getValues() :
         range.getValues().flat();
-    headings = values.shift();
+    headings = (column == -1) ?
+        values.shift() :
+        null;
     return [headings, values, sheet, range, lastR, lastC];
 }
 function getById(fileId, sheetName, column = -1, flat = false) {

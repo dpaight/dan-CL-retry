@@ -1,4 +1,3 @@
-// Compiled using undefined undefined (TypeScript 4.5.2)
 var ss = SpreadsheetApp.getActiveSpreadsheet();
 var roster = ss.getSheetByName('roster');
 function allPupilsSheet() {
@@ -97,10 +96,10 @@ function saveLogEntry(input) {
     if (input == undefined || input == null || input.length == 0) {
         Logger.log('input empty');
     }
-    var id = input[0], entry = input[1];
+    var id = input[0], entry = input[1], nmjdob=input[2];
     var [headings, logVals, logResp, range, last, lastC] = get('logRespMerged');
     var log_entry_id = getNextLogEntryId();
-    var row = [[moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'), Session.getActiveUser().getEmail(), , entry, log_entry_id, id]];
+    var row = [[moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'), Session.getActiveUser().getEmail(), nmjdob, entry, log_entry_id, id]];
     var range = logResp.getRange(last + 1, 1, 1, row[0].length);
     range.setValues(row);
     row = row;
@@ -1488,7 +1487,8 @@ function saveEditedLogEntry(obj) {
     return obj;
 }
 function updateLogForm() {
-    var [headings, values, sheet, range, lastR, lastC] = get('roster', 1, true);
+    var [headings, values, sheet, range, lastR, lastC] = get('roster', 42, true);
+    values.shift();
     Logger.log('nmjdob array = %s', JSON.stringify(values));
     var form = FormApp.openById('1t9mAS03Kq5C8PkHiCoD47fVGc9c5E_5gnwk4NENJGl4');
     var items = form.getItems();
@@ -1500,16 +1500,17 @@ function updateLogForm() {
  * adds log entry from Forms to regular sheet for log entries
  */
 function appendNewLogEntry(e) {
-    updateLogForm();
-    getNextLogEntryId();
     var v = e.namedValues;
     Logger.log('the object for the form submit event is %s', JSON.stringify(v));
+    // updateLogForm();
+    getNextLogEntryId();
     var [Rheadings, Rvalues, Rsheet, Rrange, RlastR, RlastC] = get('roster');
+
     var [headings, values, sheet, range, lastR, lastC] = get('logRespMerged');
     for (let i = 0; i < Rvalues.length; i++) {
         const el = Rvalues[i];
-        var nextId = getNextLogEntryId();
-        if (el[0] == v.Student) {
+        if (el[41] == v.Student) {
+            var nextId = getNextLogEntryId();
             var record = [[moment(v.Timestamp, 'M/D/YYYY HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss.SSSZ'), v['Email Address'], v.Student, v.log_entry, nextId, el[Rheadings.indexOf("seis_id")]]];
             var dest_range = sheet.getRange((lastR + 1), 1, 1, record[0].length);
             dest_range.setValues(record);

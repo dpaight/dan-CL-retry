@@ -67,6 +67,8 @@ function updateRoster() {
     var dest = ss.getSheetByName('roster');
     var destRng = dest.getRange(2, 1, newDataWithHeadings.length, newDataWithHeadings[0].length);
     destRng.setValues(newDataWithHeadings);
+    updateLogForm();
+
 }
 
 function updateRoster2() {

@@ -181,12 +181,14 @@
 
       var entry = $("#logEntry").val();
       var id = $("#seis_id").val();
+      var nmjdob = $("#nmjdob").val();
       if (entry.length > 0) {
         $("html,body").css("cursor", "wait");
         // console.log('id and entry are %s and %s', id, entry);
+        console.log('saving: %s, %s, %s',id, entry, nmjdob);
         google.script.run
           .withSuccessHandler(updateLogEntryCache)
-          .saveLogEntry([id, entry]);
+          .saveLogEntry([id, entry, nmjdob]);
       }
       document.body.style.cursor = "default";
       $("#logEntry").val('');
@@ -199,12 +201,13 @@
 
       var entry = $("#logEntry").val();
       var id = $("#seis_id").val();
+      var nmjdob = $("#nmjdob").val();
       if (entry.length > 0) {
         $("html,body").css("cursor", "wait");
         // console.log('id and entry are %s and %s', id, entry);
         google.script.run
           .withSuccessHandler(updateLogEntryCache)
-          .saveLogEntry([id, entry]);
+          .saveLogEntry([id, entry, nmjdob]);
       }
       document.body.style.cursor = "default";
       $(this).removeClass("active");
@@ -515,7 +518,11 @@
     $("#seis_id").val(seis_id);
     $("#stuemail").val((first_name[0] + last_name[0] + student_id + "@stu.hemetusd.org").toLowerCase());
     $("#notes").val(notes);
+    $("#nmjdob").val(nmjdob);
     $("#teach_email").val(teachemail);
+
+    console.log('nmjdob = %s', nmjdob);
+    console.log('nmjdob = %s', $("#nmjdob").val());
 
     if ($("#corrlng").val() == 1) {
       $("#corrlng").css("background-color", "#FF0000");
@@ -1085,7 +1092,7 @@
     } catch (error) {
       console.log('error at updateLogEntryCache: %s', error);
       return;
-    } 
+    }
     for (let i = 0; i < record.length; i++) {
       const el = record[i];
       var id = el[5]
