@@ -37,6 +37,8 @@ function updateRoster() {
     var prefOrder = [];
     // this is the preferred ordering of the fields retrieved from seis; if the order is different, 
     // the next code blocks set them in the correct order
+                   "SEIS ID","Last Name","First Name","Date of Birth","Date of Last Annual Plan Review","Gender","Grade Code","Date of Next Annual Plan Review","Parent 1 Work Phone H1","Date of Last Eligibility Evaluation","Date of Next Eligibility Evaluation","Date of Initial Parent Consent","Parent 1 Cell Phone","Parent 1 Home Phone","Parent 1 Other Phone","Parent 1 Email","Parent/Guardian 1 Name","Parent 1 Mail Address","Parent 1 Mail City","Parent 1 Mail Zip"
+
     prefOrder.push("SEIS ID", "Last Name", "First Name", "Date of Birth", "Gender", "Grade Code", "Date of Last Annual Plan Review", "Date of Next Annual Plan Review", "Date of Last Eligibility Evaluation", "Date of Next Eligibility Evaluation", "Date of Initial Parent Consent", "Parent/Guardian 1 Name", "Parent 1 Email", "Parent 1 Cell Phone", "Parent 1 Home Phone", "Parent 1 Work Phone H1", "Parent 1 Other Phone", "Parent 1 Mail Address", "Parent 1 Mail City", "Parent 1 Mail Zip"
     );
 

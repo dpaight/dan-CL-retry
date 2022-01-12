@@ -4,6 +4,37 @@ function allPupilsSheet() {
     var ss2 = SpreadsheetApp.openById("1HoulMp8RlpCxvN4qf10TbxW1vzxzTjbA8xKhFjRdZY8");
     return ss2;
 }
+function findWinningSeries() {
+    
+}
+function trimSS() {
+    var sheets, sheet, last;
+    sheets = ss.getSheets();
+    var longColumn = [0, 0];
+    for (let i = 0; i < sheets.length; i++) {
+        const el = sheets[i];
+        sheet = sheets[i];
+        for (let j = 0; j < sheet.getLastColumn(); j++) {
+            let column = j + 1;
+            let theValues = sheet.getRange(1, column, sheet.getLastRow(), 1)
+                .getValues();
+            let thisLast = (theValues.filter(String).length > 0) ?
+                theValues.filter(String).length : 1;
+            if (longColumn[1] < thisLast) {
+                longColumn = [j, thisLast];
+            }
+
+        }
+        let endRow = sheet.getMaxRows();
+        Logger.log('longColumn = %s', JSON.stringify(longColumn));
+        let rows = (endRow - (longColumn[1]));
+        // sheet.getRange(longColumn[1] + 1, 1, 1, 1).setValue('trim here');
+        Logger.log('on sheet named "%s" the long column is % s and the rows are %s; the number of rows to delete is %s', sheet.getName(), longColumn, rows, Math.floor(rows * 0.9));
+        sheet.deleteRows(longColumn[1] + 1, Math.floor(rows * 0.9));
+        longColumn = [0, 0];
+    }
+}
+
 var fname = 'arguments.callee.toString().match(/function ([^\(]+)/)[1]';
 // @ts-ignore
 var moment = Moment.load();
@@ -96,7 +127,7 @@ function saveLogEntry(input) {
     if (input == undefined || input == null || input.length == 0) {
         Logger.log('input empty');
     }
-    var id = input[0], entry = input[1], nmjdob=input[2];
+    var id = input[0], entry = input[1], nmjdob = input[2];
     var [headings, logVals, logResp, range, last, lastC] = get('logRespMerged');
     var log_entry_id = getNextLogEntryId();
     var row = [[moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ'), Session.getActiveUser().getEmail(), nmjdob, entry, log_entry_id, id]];
@@ -656,7 +687,7 @@ function getTableData_roster() {
         else
             return 0;
     });
-    // Logger.log([values]);
+    Logger.log([values]);
     return values;
 }
 /**
@@ -670,13 +701,14 @@ function getRecord(id) {
     var key = 'rec' + id;
     // record was not cached; search for it
     var [headings, values, sheet, range, lastR, lastC] = get('roster');
+    // values.shift();
     for (var i = 0; i < values.length; i++) {
         var el = values[i];
         // sp.put('rec' + el[0], JSON.stringify(el));
         // cache all records along the way
         var indOfID = headings.indexOf('seis_id');
         Logger.log('headings from getRecord: %s', JSON.stringify(headings));
-        if (id == el[indOfID]) {
+        if (id == el[indOfID] && el[indOfID] != 'seis_id') {
             Logger.log('found it %s', JSON.stringify(el));
             return JSON.stringify(el);
         }
@@ -1401,6 +1433,7 @@ function addTask0(taskListId) {
 function getFirstPointer() {
     var [headings, values, sheet, range, lastR, lastC] = get('roster', 1, true);
     values.shift();
+    values.shift();
     //     console.log('getting first pointer; the values array is: %s', JSON.stringify(values));
     Logger.log(values[0]);
     return values[0];
@@ -1502,6 +1535,8 @@ function updateLogForm() {
 function appendNewLogEntry(e) {
     var v = e.namedValues;
     Logger.log('the object for the form submit event is %s', JSON.stringify(v));
+    // the object for the form submit event is {"log_entry":["Here is a log entry for the person whose name is first in the alphabet"],"Student":["ArredondoHunter1555"],"Timestamp":["12/24/2021 17:16:51"],"Email Address":["dpaight@hemetusd.org"],"":[""]}
+
     // updateLogForm();
     getNextLogEntryId();
     var [Rheadings, Rvalues, Rsheet, Rrange, RlastR, RlastC] = get('roster');

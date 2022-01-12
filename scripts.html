@@ -376,9 +376,7 @@
     sessionStorage.setItem("lastId", id);
 
     if (sessionStorage.getItem("rec" + id) != null) {
-
       showContactInfo(JSON.parse(sessionStorage.getItem("rec" + id)));
-
     } else {
       google.script.run
         .withSuccessHandler(showContactInfo)
@@ -485,11 +483,15 @@
     }
     //     console.log('record: %s', JSON.stringify(record));
 
-    var [
-      seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals
-    ] = record;
+    // var [
+    //   seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals
+    // ] = record;
 
     //     console.log('record: %s', JSON.stringify(record));
+
+    var [
+      seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, location, firstname_lastname, , notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals, goal_level_reading, goal_level_math, stuemail, manual_aeries_id, group_code, firslinit, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , 
+    ] = record;
 
 
     var key = seis_id;
