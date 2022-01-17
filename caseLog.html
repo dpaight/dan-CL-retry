@@ -128,6 +128,10 @@
         <div class="card-header">
           <h5>Roster</h5>
           <p>Click a name to view more information.</p>
+          <button class="btn btn-sm btn-success" onclick="openRosterChecklistModal()" style="font-weight: bold;">+
+            Checklist</button>
+
+
         </div>
         <div class="card-body p-0 m-0">
 
@@ -221,6 +225,21 @@
               </div>
 
               <div class="form-row align-items-center">
+                <div class="input-group input-group-sm m-1 col-12 mb-3">
+                  <div class="input-group-prepend">
+                  </div>
+                  <div class="input-group-prepend">
+                    <span class="input-group-text  " id="disability_1_code_pre">Dis1</span>
+                  </div>
+                  <input type="text" title="" class="form-control editable spr" id="disability_1_code" value="">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text  " id="disability_2_code-pre2">Dis2</span>
+                  </div>
+                  <input type="text" title="" class="form-control editable spr" id="disability_2_code" value="">
+                </div>
+              </div>
+
+              <div class="form-row align-items-center">
                 <div class="input-group input-group-sm m-1 mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="seis_id-pre">ID(SEIS) </span>
@@ -269,10 +288,6 @@
                   </div>
                   <input type="text" class="form-control editable spr" id="parent_1_email" value="">
 
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="mail2-pre">EM2</span>
-                  </div>
-                  <input type="text" class="form-control editable spr" id="u3_parent_1a_email" value="">
                 </div>
               </div>
               <div class="form-row align-items-center">
@@ -943,10 +958,6 @@
                           </div>
                           <input type="text" class="form-control editable spr" id="s_parent_1_email" value="">
 
-                          <div class="input-group-prepend">
-                            <span class="input-group-text" id="s_mail2-pre">EM2</span>
-                          </div>
-                          <input type="text" class="form-control editable spr" id="s_u3_parent_1a_email" value="">
                         </div>
                       </div>
 
@@ -964,6 +975,37 @@
 
 
 
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="checklist" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="table m-0 p-0" style="height: 650px;">
+                  <table id="rosterList" class="table table-sm">
+                    <thead class="thead sticky">
+                      <tr class='d-flex'>
+                        <th scope='col' class='tableName col-6' onclick="sortTable('rosterList',0)">
+                          Name
+                        </th>
+                        <th scope='col' class=' col-3' onclick="sortTable('rosterList',1)">
+                          Annual
+                        </th>
+                        <th scope='col' class='col-3' onclick="sortTable('rosterList',2)">
+                          Tri/<div style='color:#ff3939;'>InitConsent</div>
+                        </th>
+                      </tr>
+                      <!-- insert headings for due dates table -->
+                    </thead>
+                    <tbody id="modal00tb">
+                      <!-- insert names and dates -->
+                    </tbody>
+                  </table>
+                </div>
+                  
               </div>
             </div>
           </div>

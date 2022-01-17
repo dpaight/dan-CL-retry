@@ -185,7 +185,7 @@
       if (entry.length > 0) {
         $("html,body").css("cursor", "wait");
         // console.log('id and entry are %s and %s', id, entry);
-        console.log('saving: %s, %s, %s',id, entry, nmjdob);
+        console.log('saving: %s, %s, %s', id, entry, nmjdob);
         google.script.run
           .withSuccessHandler(updateLogEntryCache)
           .saveLogEntry([id, entry, nmjdob]);
@@ -481,22 +481,16 @@
       //       console.log('parsed json');
       record = JSON.parse(record);
     }
-    //     console.log('record: %s', JSON.stringify(record));
-
-    // var [
-    //   seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals
-    // ] = record;
-
-    //     console.log('record: %s', JSON.stringify(record));
-
     var [
-      seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, location, firstname_lastname, , notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals, goal_level_reading, goal_level_math, stuemail, manual_aeries_id, group_code, firslinit, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , 
+      seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
     ] = record;
 
 
     var key = seis_id;
     sessionStorage.key = JSON.stringify(record);
 
+    $("#disability_1_code").val(disability_1_code);
+    $("#disability_2_code").val(disability_2_code);
 
     $("#langflu").val(langflu);
     $("#corrlng").val(corrlng);
@@ -510,16 +504,14 @@
     $("#u1_phone").attr("title", "work/other");
     $("#u1_phone").val(phoneFmt(parent_1_work_phone_h1) + phoneFmt(parent_1_other_phone));
     $("#parent_1_email").val(parent_1_email);
-    $("#u3_parent_1a_email").val(u3_parent_1a_email);
     $("#sex").val(gender.toString()[0]);
-    $("#teachname").val(teacher_name);
+    $("#teachname").val(teachname);
     $("#teachemail").val("teachemail");
     $("#addStr").val(parent_1_mail_address);
     $("#addCity").val(parent_1_mail_city);
     $("#addZip").val(parent_1_mail_zip);
     $("#seis_id").val(seis_id);
     $("#stuemail").val((first_name[0] + last_name[0] + student_id + "@stu.hemetusd.org").toLowerCase());
-    $("#notes").val(notes);
     $("#nmjdob").val(nmjdob);
     $("#teach_email").val(teachemail);
 
@@ -800,6 +792,7 @@
     document.body.style.cursor = "default";
     $("#saveEntry").attr("class", "btn btn-sm btn-success my-1 svChngs");
   }
+
   // display table of names sorted by due dates
   function showRosterTable(data) {
     var loc = 'loc00';
@@ -808,7 +801,7 @@
     for (let i = 0; i < data.length; i++) {
       const el = data[i];
       var [
-        seis_id, last_name, first_name, date_of_birth, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_email, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, , , , , , , , , , , , , , , , , , , , , , nmjdob, student_id, tchr_num, teacher_name, sai_minutes, sai_min_per, notes, langflu, corrlng, u3_parent_1a_email, teachemail, genedgroups, sped_goals
+      seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
       ] = el;
       //       console.log(JSON.stringify(el));
       list = $("#" + loc + "tb");
@@ -850,6 +843,8 @@
 
     return 'rosterList', 0;
   }
+
+
   // bindSetStudentClick();
   // show upcoming iep meetings on the calendar
   function showCalData(data) {
@@ -1142,6 +1137,16 @@
       focus: true
     });
   }
+  function openRosterChecklistModal() {
+    google.script.run
+      .withSuccessHandler(showRosterChecklist)
+      .getTableData_roster();
+
+    $('#checklist').modal({
+      focus: true
+
+    });
+  }
   function addStu() {
     var obj = {};
     obj.first = $("#addFn").val();
@@ -1156,6 +1161,57 @@
     google.script.run
       .withSuccessHandler(reloadMe)
       .addStudentByIdFromRESstudentsServer(obj);
+  }
+
+  // display table of names sorted by due dates
+  function showRosterChecklist(data) {
+    var loc = 'modal00';
+
+    var pending = ['#ffffff', '#000000'];
+    for (let i = 0; i < data.length; i++) {
+      const el = data[i];
+      var [
+      seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
+      ] = el;
+      //       console.log(JSON.stringify(el));
+      list = $("#" + loc + "tb");
+
+      if (!seis_id) {
+        alert(" has no id"); // lnCmafn + 
+      } else {
+        if (moment(date_of_last_eligibility_evaluation).isValid() == false) {
+          var evalDate = moment(date_of_initial_parent_consent).add(1, 's').format('YYYY-MM-DD');
+          pending = ['#f4cccc', '#000000'];
+        } else if (moment(date_of_last_eligibility_evaluation).add(3, 'y').isBefore(moment().add(6, 'month'))) {
+          evalDate = moment(date_of_last_eligibility_evaluation).format('YYYY-MM-DD');
+          pending = ['#d9ead3', '#000000'];
+        } else {
+          evalDate = moment(date_of_last_eligibility_evaluation).format('YYYY-MM-DD');
+          pending = ['#FFFFFF', '#000000'];
+        }
+        // console.log('evalDate hello is %s for %s', evalDate, first_name);
+        list.append(
+          '<tr class="d-flex"><td class="setStudent  col-6" data-stuId=' +
+          seis_id +
+          "> " +
+          last_name + ', ' + first_name +
+          "</td>" +
+          '<td class="tableDate setStudent col-3" data-stuId=' +
+          seis_id + '>' +
+          moment(date_of_last_annual_plan_review).format('YYYY-MM-DD') +
+          "</td>" +
+          '<td class="tableDate setStudent col-3" style="background-color:' + pending[0] + '; color:' + pending[1] + ';" data-stuId=' +
+          seis_id + '>' +
+          moment(evalDate).format('YYYY-MM-DD') +
+          "</td>" +
+          "</tr></div>"
+        );
+      }
+    }
+    store(data);
+    $('#spinner01').hide();
+
+    return 'rosterList', 0;
   }
 
 </script>

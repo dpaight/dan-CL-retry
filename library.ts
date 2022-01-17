@@ -1,3 +1,4 @@
+// Compiled using dan-cl-retry 1.0.0 (TypeScript 4.5.4)
 // Compiled using undefined undefined (TypeScript 4.5.2)
 // Compiled using ts2gas 3.6.4 (TypeScript 4.2.4)
 // Compiled using ts2gas 3.6.4 (TypeScript 4.2.4)
@@ -101,6 +102,7 @@ function findLastRowById(fileId, sheet, column) {
         1;
     return last;
 }
+//# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
