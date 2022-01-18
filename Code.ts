@@ -695,23 +695,6 @@ function getCalData_events() {
   var [headings, values, sheet, range, lastR, lastC] = getDisp('meetings');
   return JSON.stringify(values);
 }
-function getRecord(id) {
-  var key = 'rec' + id;
-  // record was not cached; search for it
-  var [headings, values, sheet, range, lastR, lastC] = get('roster');
-  // values.shift();
-  for (var i = 0; i < values.length; i++) {
-    var el = values[i];
-    // sp.put('rec' + el[0], JSON.stringify(el));
-    // cache all records along the way
-    var indOfID = headings.indexOf('seis_id');
-    Logger.log('headings from getRecord: %s', JSON.stringify(headings));
-    if (id == el[indOfID] && el[indOfID] != 'seis_id') {
-      Logger.log('found it %s', JSON.stringify(el));
-      return JSON.stringify(el);
-    }
-  }
-}
 
 function makeLevelsShortcut(id) {
   // if (id === void 0) {
@@ -1047,7 +1030,7 @@ function addMatchVarColOne(array) {
     const row = array[i];
     var y2 = moment(row[searchItems.birth], 'MM-DD-YYYY').format('YY');
     var doy = moment(row[searchItems.birth], 'MM-DD-YYYY').dayOfYear();
-    var nmjdob = row[searchItems.last].toString().replace(/[- ']/g,"") + row[searchItems.first].toString().replace(/[- ']/g,"") +
+    var nmjdob = row[searchItems.last].toString().replace(/[- ']/g, "") + row[searchItems.first].toString().replace(/[- ']/g, "") +
       y2.toString() + doy.toString();
     row.unshift(nmjdob);
     seisDataMod.push(row);
@@ -1266,7 +1249,6 @@ function addTask0(taskListId) {
 function getFirstPointer() {
   var [headings, values, sheet, range, lastR, lastC] = get('roster', 1, true);
   values.shift();
-  values.shift();
   //     console.log('getting first pointer; the values array is: %s', JSON.stringify(values));
   Logger.log(values[0]);
   return values[0];
@@ -1377,7 +1359,7 @@ function appendNewLogEntry(e) {
   var [headings, values, sheet, range, lastR, lastC] = get('logRespMerged');
   for (let i = 0; i < Rvalues.length; i++) {
     const el = Rvalues[i];
-    if (el[41] == v.Student) {
+    if (el[Rheadings.indexOf('nmjdob')] == v.Student) {
       var nextId = getNextLogEntryId();
       var record = [[moment(v.Timestamp, 'M/D/YYYY HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss.SSSZ'), v['Email Address'], v.Student, v.log_entry, nextId, el[Rheadings.indexOf("seis_id")]]];
       var dest_range = sheet.getRange((lastR + 1), 1, 1, record[0].length);
@@ -1573,6 +1555,44 @@ function markNoGo() {
   dest.clear();
   SpreadsheetApp.flush();
   dest.setValues(times);
+}
+function getRecord(id) {
+  // record was not cached; search for it
+  var [headings, values, sheet, range, lastR, lastC] = get('roster');
+  // values.shift();
+  for (var i = 0; i < values.length; i++) {
+    var el = values[i];
+    // sp.put('rec' + el[0], JSON.stringify(el));
+    // cache all records along the way
+    var indOfID = headings.indexOf('seis_id');
+    Logger.log('headings from getRecord: %s', JSON.stringify(headings));
+    if (id == el[indOfID] && el[indOfID] != 'seis_id') {
+      Logger.log('found it %s', JSON.stringify(el));
+      Logger.log('notes = %s', JSON.stringify(values[i]));
+
+      return JSON.stringify(values[i]);
+    }
+  }
+}
+function getNotes(data) {
+  var [id, value] = data;
+  Logger.log('params %s, %s', id, value);
+  var sheet = ss.getSheetByName('notes');
+  var array = sheet.getRange('A1:B30').getDisplayValues();
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i];
+    if (id.toString() == element[0])
+      if (value == undefined || value == null) {
+        return element[1];
+      } else {
+        var cell = sheet.getRange(i + 1, 2, 1, 1);
+        cell.setValue(value);
+        return value;
+      }
+  }
+}
+function saveNote([id, value]) {
+
 }
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map

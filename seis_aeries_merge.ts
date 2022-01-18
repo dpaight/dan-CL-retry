@@ -86,9 +86,6 @@ function getFromAeriesData(newDataWithHeadings) {
         firstname_lastname = el[newDataWithHeadings[0].indexOf("first_name")] + " " + el[newDataWithHeadings[0].indexOf("last_name")];
         el.push(firstname_lastname);
 
-
-
-
         langflu = aerLookup(nmjdob, aerHeadings.indexOf("langflu"));
         el.push(langflu);
 

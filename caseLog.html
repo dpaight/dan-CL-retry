@@ -35,7 +35,7 @@
   <!-- Latest compiled and minified CSS -->
 
 
-  
+
   <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
     integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" /> -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -122,16 +122,12 @@
   </nav>
   <div class="container-fluid">
     <div class="row">
-
-
       <div class="card col-sm-12 col-lg-3 col-md-6 p-0 m-0 rosterList" style="background-color: white;">
         <div class="card-header">
           <h5>Roster</h5>
           <p>Click a name to view more information.</p>
           <button class="btn btn-sm btn-success" onclick="openRosterChecklistModal()" style="font-weight: bold;">+
             Checklist</button>
-
-
         </div>
         <div class="card-body p-0 m-0">
 
@@ -176,150 +172,159 @@
         <div class="card-body">
           <div id="stuData">
             <form>
-              <div class="form-row align-items-center">
+              <div class="form-row ">
 
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text   col-12" id="stuName-pre">Name</span>
                   </div>
                   <input type="text" class="form-control" id="stuName" style="font-size: large; font-weight: bold;"
-                    value="">
+                    read-only value="">
                 </div>
 
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="dob-pre">DOB </span>
                   </div>
-                  <input type="text" class="form-control spr col-5" id="dob" read-only value="">
+                  <input type="text" class="form-control col-5" id="dob" read-only value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="sex-pre">Sex </span>
                   </div>
-                  <input type="text" class="form-control spr col-3" id="sex" read-only value="">
+                  <input type="text" class="form-control col-3" id="sex" read-only value="">
 
                 </div>
 
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="tch-pre">Teacher</span>
 
                   </div>
-                  <input type="text" class="form-control spr" id="teachname" read-only value="">
-                  <input type="text" class="form-control spr" id="teach_email" read-only value="" hidden>
+                  <input type="text" class="form-control" id="teachname" read-only value="">
+                  <input type="text" class="form-control" id="teachemail" read-only value="" hidden>
                 </div>
 
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="corrlng-pre">CrLng</span>
                   </div>
-                  <input type="text" class="form-control col-2 spr" id="corrlng" value="">
+                  <input type="text" class="form-control col-2" id="corrlng" read-only value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="lang-pre">Lang</span>
                   </div>
-                  <input type="text" class="form-control col-2 spr" id="langflu" value="">
+                  <input type="text" class="form-control col-2" id="langflu" read-only value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="lang-pre">Grade</span>
                   </div>
-                  <input type="text" class="form-control col-2 spr" id="gradeCode" value="">
+                  <input type="text" class="form-control col-2" id="gradeCode" read-only value="">
                 </div>
 
               </div>
 
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1 col-9 mb-2">
                   <div class="input-group-prepend">
                   </div>
                   <div class="input-group-prepend">
-                    <span class="input-group-text  " id="disability_1_code_pre">Dis1</span>
+                    <span class="input-group-text  " id="disability_1_code-pre">Dis1</span>
                   </div>
-                  <input type="text" title="" class="form-control editable spr" id="disability_1_code" value="">
+                  <input type="text" title="" class="form-control " id="disability_1_code" read-only value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="disability_2_code-pre2">Dis2</span>
                   </div>
-                  <input type="text" title="" class="form-control editable spr" id="disability_2_code" value="">
+                  <input type="text" title="" class="form-control " id="disability_2_code" read-only value="">
                 </div>
               </div>
 
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 mb-3">
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
-                    <span class="input-group-text  " id="seis_id-pre">ID(SEIS) </span>
                   </div>
-                  <input type="text" class="form-control spr" id="seis_id" value="">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text  " id="notes2-pre">Notes</span>
+                  </div>
+                  <textarea type="text" title="" class="form-control spr" style="height: 6rem;"
+                    id="notes2">Notes</textarea>
                 </div>
               </div>
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1  mb-3">
+
+              <div class="form-row col-12">
+                <div class="input-group input-group-sm m-1 mb-2 col-5">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="seis_id-pre">ID(SEIS) </span>
+                  </div>
+                  <input type="text" class="form-control" id="seis_id" read-only value="">
+                </div>
+                <div class="input-group input-group-sm m-1 mb-2 col-5">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="husd_id-pre">ID(husd) </span>
+                  </div>
+                  <input type="text" class="form-control" id="husd_id" read-only value="">
+                </div>
+              </div>
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1  mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="stuem-pre">StuEM</span>
                   </div>
-                  <input type="text" class="form-control spr" id="stuemail" value="">
+                  <input type="text" class="form-control" id="stuemail" read-only value="">
                 </div>
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="parent_guardian_1_name-pre">Parents </span>
                   </div>
-                  <input type="text" class="form-control spr" id="parent_guardian_1_name" value="">
+                  <input type="text" class="form-control" id="parent_guardian_1_name" read-only value="">
                 </div>
 
               </div>
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="parent_1_Home_Phone-pre">PH1</span>
                   </div>
-                  <input type="text" title="" class="form-control editable spr" id="parent_1_home_phone" value="">
+                  <input type="text" title="" class="form-control " id="parent_1_home_phone" read-only value="">
                 </div>
               </div>
 
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text  " id="phone-pre2">PH2 </span>
-                  </div>
-                  <input type="text" title="" class="form-control editable spr" id="u1_phone" value="">
-                </div>
-              </div>
-
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
 
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="mai-pre">EM1</span>
                   </div>
-                  <input type="text" class="form-control editable spr" id="parent_1_email" value="">
+                  <input type="text" class="form-control " id="parent_1_email" read-only value="">
 
                 </div>
               </div>
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="addStr-pre2">Strt</span>
                   </div>
-                  <input type="text" title="" class="form-control editable spr" id="addStr" value="">
+                  <input type="text" title="" class="form-control " id="addStr" read-only value="">
                 </div>
               </div>
 
-              <div class="form-row align-items-center">
-                <div class="input-group input-group-sm m-1 col-12 mb-3">
+              <div class="form-row ">
+                <div class="input-group input-group-sm m-1 col-12 mb-2">
                   <div class="input-group-prepend">
                   </div>
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="addCity-pre2">City</span>
                   </div>
-                  <input type="text" title="" class="form-control editable spr" id="addCity" value="">
+                  <input type="text" title="" class="form-control " id="addCity" read-only value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text  " id="addZip-pre2">Zip</span>
                   </div>
-                  <input type="text" title="" class="form-control editable spr" id="addZip" value="">
+                  <input type="text" title="" class="form-control " id="addZip" read-only value="">
                 </div>
               </div>
-              <input type="text" id="nmjdob"  value="" hidden>
+
+
+              <input type="text" id="nmjdob" value="" hidden>
             </form>
           </div>
           <div class="card-footer p-1">
-            <!-- <p style="margin: 5px;">Notes</p>
-            <textarea name="notes" class="spr" id="notes" cols="40" rows="6"
-              style="margin-top: 0px; width: 100%; height: 130px"></textarea> -->
             <button class="btn btn-sm btn-success" onclick="openAddStudentModal()" style="font-weight: bold;">+
               STUDENT</button>
             <button id="search" class="btn btn-sm btn-success" onclick="openSrchModal()" style="font-weight: bold;">STU
@@ -338,10 +343,11 @@
 
               <div class="btn-group" role="group">
                 <button id="saveEntry_2" class="btn btn-sm btn-success  svChngs saveEntryBtn">SAVE</button>
-                <button id="cancelEntry_2" class="btn btn-sm btn-secondary svChngs cancelEntryBtn">CANCEL</button>
+                <button id="cancelEntry_2" class="btn btn-sm btn-secondary svChngs cancelEntryBtn" onclick="$('#logEntry').val('')">CANCEL</button>
                 <button id="printEntry" class="btn btn-sm btn-primary svChngs printEntryBtn"
                   onclick="openLogPrintDialog()">PRINT</button>
-                <!-- ($('#seis_id').val(), 'printedLogs') -->
+                  <button id="gatherTemails" class="btn btn-sm btn-success" onclick="lookForTemails($('#seis_id').val())" style="font-weight: bold;">GATHER TCH EM</button>
+                  <!-- ($('#seis_id').val(), 'printedLogs') -->
               </div>
             </span>
             <!-- <p class="my-0">header text R2C1</p> -->
@@ -964,9 +970,6 @@
                     </form>
                   </div>
                   <div class="card-footer p-1">
-                    <!-- <p style="margin: 5px;">Notes</p>
-                          <textarea name="notes" class="spr" id="s_notes" cols="40" rows="6"
-                            style="margin-top: 0px; width: 100%; height: 130px"></textarea> -->
                     <button class="btn btn-sm btn-success" onclick="openAddStudentModal()" style="font-weight: bold;">+
                       STUDENT</button>
                   </div>
@@ -1005,7 +1008,7 @@
                     </tbody>
                   </table>
                 </div>
-                  
+
               </div>
             </div>
           </div>

@@ -157,20 +157,22 @@
     });
 
     //save changes to spreadsheet
-    $("body").on("change", ".spr", function (event) {
+    $("body").on("change", "#notes2", function (event) {
       var id = $("#seis_id").val();
       var field = $(this).attr("id");
       var value = $(this).val();
-      // console.log('id = %s, field = %s, value = %s', id, field, value);
+
+      console.log('id = %s, field = %s, value = %s', id, field, value);
       google.script.run
-        .withSuccessHandler(updateLocalStorage) // works with returned values: id, index, value
-        .saveField([id, field, value]);
+        .withSuccessHandler(showNotes) // works with returned values: id, index, value
+        .getNotes([id, value]);
 
     });
     function updateLocalStorage(array) {
       var [id, index, value] = array;
       var cachedRecord = JSON.parse(sessionStorage.getItem('rec' + id));
       cachedRecord.splice(index, 1, value);
+      console.log('stored: %s', JSON.stringify(cachedRecord));
       sessionStorage.setItem('rec' + id, JSON.stringify(cachedRecord));
     }
 
@@ -246,21 +248,22 @@
         .updateRoster();
     });
     $("body").on("click", "#search", function () {
-      $("#srchModal").modal("show");
-      if ($(this).val() !== "Cancel") {
-        if ($(this).val() == "Yes") {
-          var tem = $("#teachemail").val() + ", dpaight@hemetusd.org";
-        } else {
-          var tem = "dpaight@hemetusd.org";
-        }
-        var id = $("#seis_id").val();
-        var stuName = $("#stuName").val();
-        // console.log("sendPFLQToTchr() fired; running server script with params: " + stuName + "; " + id + "; " + tem);
-        google.script.run
-          .withSuccessHandler(focus)
-          .sendLevelsForm(stuName, id, tem);
-      }
+      // $("#srchModal").modal("show");
+      // if ($(this).val() !== "Cancel") {
+      //   if ($(this).val() == "Yes") {
+      //     var tem = $("#teachemail").val() + ", dpaight@hemetusd.org";
+      //   } else {
+      //     var tem = "dpaight@hemetusd.org";
+      //   }
+      var id = $("#seis_id").val();
+      var stuName = $("#stuName").val();
+      // console.log("sendPFLQToTchr() fired; running server script with params: " + stuName + "; " + id + "; " + tem);
+      google.script.run
+        .withSuccessHandler(focus)
+        .sendLevelsForm(stuName, id, "dpaight@hemetusd.org");
+
     });
+
 
     $("body").on("mouseenter", ".logEntry", function () {
       $(this).css("cursor", "pointer");
@@ -380,8 +383,14 @@
     } else {
       google.script.run
         .withSuccessHandler(showContactInfo)
-        .getRecord(id);
+        .getRecord(id.toString());
     }
+    google.script.run
+      .withSuccessHandler(showNotes)
+      .getNotes([id]);
+  }
+  function showNotes(notes) {
+    $("#notes2").val(notes);
   }
   function showTBsnippetGl(goalObj) {
     var snippet = '[' +
@@ -481,16 +490,18 @@
       //       console.log('parsed json');
       record = JSON.parse(record);
     }
+
     var [
       seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
     ] = record;
 
-
+    console.log('record = %s', JSON.stringify(record));
     var key = seis_id;
     sessionStorage.key = JSON.stringify(record);
 
     $("#disability_1_code").val(disability_1_code);
     $("#disability_2_code").val(disability_2_code);
+    $("#husd_id").val(student_id);
 
     $("#langflu").val(langflu);
     $("#corrlng").val(corrlng);
@@ -513,7 +524,7 @@
     $("#seis_id").val(seis_id);
     $("#stuemail").val((first_name[0] + last_name[0] + student_id + "@stu.hemetusd.org").toLowerCase());
     $("#nmjdob").val(nmjdob);
-    $("#teach_email").val(teachemail);
+    $("#teachemail").val(teachemail);
 
     console.log('nmjdob = %s', nmjdob);
     console.log('nmjdob = %s', $("#nmjdob").val());
@@ -801,7 +812,7 @@
     for (let i = 0; i < data.length; i++) {
       const el = data[i];
       var [
-      seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
+        seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
       ] = el;
       //       console.log(JSON.stringify(el));
       list = $("#" + loc + "tb");
@@ -1171,7 +1182,7 @@
     for (let i = 0; i < data.length; i++) {
       const el = data[i];
       var [
-      seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
+        seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
       ] = el;
       //       console.log(JSON.stringify(el));
       list = $("#" + loc + "tb");
@@ -1213,5 +1224,12 @@
 
     return 'rosterList', 0;
   }
-
+  function lookForTemails(id) {
+    google.script.run
+      .withSuccessHandler(putInLogEntry)
+      .lookForTeachers(id);
+  }
+  function putInLogEntry(data) {
+    $("#logEntry").val(data);
+  }
 </script>
