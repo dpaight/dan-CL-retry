@@ -248,22 +248,13 @@
         .updateRoster();
     });
     $("body").on("click", "#search", function () {
-      // $("#srchModal").modal("show");
-      // if ($(this).val() !== "Cancel") {
-      //   if ($(this).val() == "Yes") {
-      //     var tem = $("#teachemail").val() + ", dpaight@hemetusd.org";
-      //   } else {
-      //     var tem = "dpaight@hemetusd.org";
-      //   }
-      var id = $("#seis_id").val();
+            var id = $("#seis_id").val();
       var stuName = $("#stuName").val();
       // console.log("sendPFLQToTchr() fired; running server script with params: " + stuName + "; " + id + "; " + tem);
       google.script.run
         .withSuccessHandler(focus)
         .sendLevelsForm(stuName, id, "dpaight@hemetusd.org");
-
     });
-
 
     $("body").on("mouseenter", ".logEntry", function () {
       $(this).css("cursor", "pointer");
@@ -501,6 +492,8 @@
 
     $("#disability_1_code").val(disability_1_code);
     $("#disability_2_code").val(disability_2_code);
+    $("#date_of_last_eligibility_evaluation").val(date_of_last_eligibility_evaluation);
+    $("#date_of_last_annual_plan_review").val(date_of_last_annual_plan_review);
     $("#husd_id").val(student_id);
 
     $("#langflu").val(langflu);
@@ -513,7 +506,6 @@
     $("#parent_1_home_phone").attr("title", "cell/home");
     $("#parent_1_home_phone").val(phoneFmt(parent_1_cell_phone) + phoneFmt(parent_1_home_phone));
     $("#u1_phone").attr("title", "work/other");
-    $("#u1_phone").val(phoneFmt(parent_1_work_phone_h1) + phoneFmt(parent_1_other_phone));
     $("#parent_1_email").val(parent_1_email);
     $("#sex").val(gender.toString()[0]);
     $("#teachname").val(teachname);
@@ -534,7 +526,6 @@
       $("#corrlng").css("color", "#FFFFFF");
 
     } else {
-      $("#corrlng").css("background-color", "#FFFFFF");
       $("#corrlng").css("color", "#000000");
     }
 
@@ -921,6 +912,10 @@
     snip += ',"tem"="' + $("#teachemail").val() + '"';
     snip += ',"tch"="' + $("#teachname").val() + '"';
     snip += ',"sid"="' + $("#seis_id").val() + '"';
+    
+    snip += ',"lst1"="' + $("#date_of_last_annual_plan_review").val() + '"';
+    snip += ',"lst3"="' + $("#date_of_last_eligibility_evaluation").val() + '"';
+
     // snip += ',"id"="' + 
     snip += ',"sem"="' + $("#stuemail").val().toString().replace(/[A-z]{2}(\d{6}).*/, "$1") + '"';
     snip += "]";

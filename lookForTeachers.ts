@@ -1,12 +1,15 @@
 function lookForTeachers(id) {
+    // parseClassListReport();
     var [c_headings, c_values, sheet, range, lastR, lastC] = get('coursesTeachers');
     var [rost_headings, rost_values, rost_sheet, rost_range, rost_lastR, rost_lastC] = get('roster');
     var ctStuIdIdx = c_headings.indexOf('Student ID');
     var seisIdIdx = rost_headings.indexOf('seis_id');
     var husdIdIdx = rost_headings.indexOf('student_id');
     var foundCodes = [];
+    
     var teachersInfo = "Current teachers: ";
-    var tnIdx = c_headings.indexOf('Teacher#');
+    // "teachName", "teachEmail", "Student ID", "studentName"
+    var tnIdx = c_headings.indexOf('teachName');
     for (let i = 0; i < rost_values.length; i++) {
         const el = rost_values[i];
         if (el[seisIdIdx] == id) {
@@ -16,7 +19,7 @@ function lookForTeachers(id) {
                 if (celement[ctStuIdIdx] == husd_id) {
                     if (foundCodes.indexOf(celement[0]) == -1) {
                         foundCodes.push(celement[0]);
-                        var ti = getTeacherInfo(celement[0]);
+                        var ti = celement[1];
                         teachersInfo += ti + ", ";
                     }
                 }

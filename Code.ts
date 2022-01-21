@@ -1591,8 +1591,51 @@ function getNotes(data) {
       }
   }
 }
-function saveNote([id, value]) {
+function parseClassListReport() {
+  // parses the Aeries report entitled 'class list by section'
+  // creates a table from which the lookForTeachers function builds a list of 
+  // teacher email addresses (useful for calendar invites)
+  var file = SpreadsheetApp.openById('1F52KzT7GyHnOzj8Nf2rb44rvdb-orx7bjm_61FUqaQc');
+  var sheet = file.getSheetByName('Sheet1');
+  var range = sheet.getRange('A1:Z');
+  var values = range.getValues();
 
+  var row = [];
+  var parsed = [["teachName", "teachEmail", "Student ID", "studentName"]];
+
+  var [theadings, tvalues, tsheet, trange, lastR, lastC] = get('teacherCodes', 2, true);
+  var [alltheadings, alltvalues, alltsheet, alltrange, alllastR, alllastC] = get('teacherCodes');
+
+  var teachers = tvalues.map(function (x) {
+    return x.toString().replace(/^Teacher: ([A-z]*)/g, "$1");
+  })
+
+  for (let i = 0; i < values.length; i++) {
+    const el = values[i];
+    if (el[0].toString().indexOf('Teacher') == 0) {
+      try {
+        var thisTeacher = el[0].toString().replace(/^Teacher: ([A-z]*)/g, "$1");
+        var tIndx = teachers.indexOf(thisTeacher) - 1;
+        var thisTeacherEmail = alltvalues[tIndx][4];
+      } catch (error) {
+        Logger.log('error: %s, %s, %s', error, thisTeacher, thisTeacherEmail);
+      }
+      var counter = i + 2;
+
+      while (values[counter][0].toString().search(/\d{6}/) !== -1) {
+        const student = values[counter];
+        row.push(thisTeacher, thisTeacherEmail, student[0], student[4]);
+        parsed.push(row);
+        row = [];
+        counter++;
+      }
+      row = [];
+      i = counter + 1;
+    }
+  }
+  var dest = ss.getSheetByName('coursesTeachers');
+  var drange = dest.getRange(1, 1, parsed.length, parsed[0].length);
+  drange.setValues(parsed);
 }
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
