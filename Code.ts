@@ -1593,12 +1593,14 @@ function getNotes(data) {
 }
 function parseClassListReport() {
   // parses the Aeries report entitled 'class list by section'
-  // creates a table from which the lookForTeachers function builds a list of 
+  // creates a table from which the lookForTeachers function builds a list of
   // teacher email addresses (useful for calendar invites)
-  var file = SpreadsheetApp.openById('1F52KzT7GyHnOzj8Nf2rb44rvdb-orx7bjm_61FUqaQc');
-  var sheet = file.getSheetByName('Sheet1');
-  var range = sheet.getRange('A1:Z');
-  var values = range.getValues();
+  
+
+  // var file = SpreadsheetApp.openById('1F52KzT7GyHnOzj8Nf2rb44rvdb-orx7bjm_61FUqaQc');
+  // var sheet = file.getSheetByName('Sheet1');
+  // var range = sheet.getRange('A1:Z');
+  var values = values =  parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "aeries class list by section.csv")
 
   var row = [];
   var parsed = [["teachName", "teachEmail", "Student ID", "studentName"]];
@@ -1624,7 +1626,7 @@ function parseClassListReport() {
 
       while (values[counter][0].toString().search(/\d{6}/) !== -1) {
         const student = values[counter];
-        row.push(thisTeacher, thisTeacherEmail, student[0], student[4]);
+        row.push(thisTeacher, thisTeacherEmail, student[0], student[1]);
         parsed.push(row);
         row = [];
         counter++;

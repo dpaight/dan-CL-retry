@@ -16,7 +16,6 @@
 
     $("td[data-stuId|='1010101']").css("color", "light-yellow");
 
-
     $("body").on("dblclick dbl-tap", ".goalList", function (e) {
       // console.log('event triggered a[name=goalList clicked');
       e.preventDefault();
@@ -201,7 +200,8 @@
       event.preventDefault();
       document.body.style.cursor = "wait";
 
-      var entry = $("#logEntry").val();
+      var entry = $("#logEntry").val().toString().replace(/\n/g, "->");
+      console.log('entry is %s', entry);
       var id = $("#seis_id").val();
       var nmjdob = $("#nmjdob").val();
       if (entry.length > 0) {
@@ -248,7 +248,7 @@
         .updateRoster();
     });
     $("body").on("click", "#search", function () {
-            var id = $("#seis_id").val();
+      var id = $("#seis_id").val();
       var stuName = $("#stuName").val();
       // console.log("sendPFLQToTchr() fired; running server script with params: " + stuName + "; " + id + "; " + tem);
       google.script.run
@@ -449,6 +449,32 @@
     } else {
       google.script.run
         .withSuccessHandler(showGoals)
+        .getGoalListItems([glLvl, glArea, id]);
+    }
+    // returns [[gId, gLvl, gArea, gDmn, gAnl, gO1, gO2, gO3]]
+  }
+
+  function findGoals_m() {
+    var glLvl = $("#m-glLvl").children("option:selected").val();
+    var glLvlElid = $("#m-glLvl").children("option:selected").attr('id');
+
+    var glArea = $("#m-glArea").children("option:selected").val();
+    var glAreaElid = $("#m-glArea").children("option:selected").attr('id');
+
+    var id = $("#seis_id").val();
+    // console.log("data passed to goal search: %s, %s, %s", glLvl, glArea, id);
+
+    sessionStorage.setItem('glLvl', glLvl);
+    sessionStorage.setItem('glArea', glArea);
+    var search = glLvl + '_' + glArea;
+
+
+    if (sessionStorage.getItem('goals' + search)) {
+      // console.log('getting items from cache for ' + search);
+      showGoals(sessionStorage.getItem('goals' + search));
+    } else {
+      google.script.run
+        .withSuccessHandler(showGoals_m)
         .getGoalListItems([glLvl, glArea, id]);
     }
     // returns [[gId, gLvl, gArea, gDmn, gAnl, gO1, gO2, gO3]]
@@ -879,6 +905,17 @@
 
     document.body.style.cursor = "default";
   }
+  function showGoals_m(goalListItemsArray) {
+    // console.log(goalListItemsArray);
+    $("#m-glLst").empty();
+
+    for (let i = 0; i < goalListItemsArray.length; i++) {
+      const element = goalListItemsArray[i];
+      $("#m-glLst").append(element);
+    }
+
+    document.body.style.cursor = "default";
+  }
   function showTBsnippet(snippet) {
     //     console.log('snippet is: %s', JSON.stringify(snippet));
 
@@ -912,7 +949,7 @@
     snip += ',"tem"="' + $("#teachemail").val() + '"';
     snip += ',"tch"="' + $("#teachname").val() + '"';
     snip += ',"sid"="' + $("#seis_id").val() + '"';
-    
+
     snip += ',"lst1"="' + $("#date_of_last_annual_plan_review").val() + '"';
     snip += ',"lst3"="' + $("#date_of_last_eligibility_evaluation").val() + '"';
 
@@ -1147,12 +1184,11 @@
     google.script.run
       .withSuccessHandler(showRosterChecklist)
       .getTableData_roster();
-
     $('#checklist').modal({
       focus: true
-
     });
   }
+
   function addStu() {
     var obj = {};
     obj.first = $("#addFn").val();
@@ -1219,10 +1255,19 @@
 
     return 'rosterList', 0;
   }
-  function lookForTemails(id) {
-    google.script.run
-      .withSuccessHandler(putInLogEntry)
-      .lookForTeachers(id);
+  function lookForTemails(event) {
+    var id = $("#seis_id").val();
+    if (event.shiftKey) {
+      google.script.run
+        .withSuccessHandler(putInLogEntry)
+        .lookForTeachers(id, true);
+    } else {
+      google.script.run
+        .withSuccessHandler(putInLogEntry)
+        .lookForTeachers(id, false);
+
+    }
+
   }
   function putInLogEntry(data) {
     $("#logEntry").val(data);

@@ -1,5 +1,7 @@
-function lookForTeachers(id) {
-    // parseClassListReport();
+function lookForTeachers(id, refresh:boolean) {
+    if (refresh) {
+        parseClassListReport();
+    }
     var [c_headings, c_values, sheet, range, lastR, lastC] = get('coursesTeachers');
     var [rost_headings, rost_values, rost_sheet, rost_range, rost_lastR, rost_lastC] = get('roster');
     var ctStuIdIdx = c_headings.indexOf('Student ID');

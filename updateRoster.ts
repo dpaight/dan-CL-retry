@@ -1,39 +1,40 @@
 // Compiled using dan-cl-retry 1.0.0 (TypeScript 4.5.4)
 // Compiled using undefined undefined (TypeScript 4.5.2)
+function parseCSV(folderId, fName) {
+    var folder = DriveApp.getFolderById(folderId);
+    var files = folder.getFiles();
+    var fileIds = [];
+    // looking for .csv file
+    var found = false;
+    while (files.hasNext() && found == false) {
+        var file = files.next();
+        var fileName = file.getName();
+        var status; // '1' if parse function is successful
+        var re = new RegExp(fName);
+        if (fileName.toString().search(re) !== -1) {
+            found = true;
+            var csvFile = file.getBlob().getDataAsString();
+            fileIds.push(file.getId());
+            var data = Utilities.parseCsv(csvFile);
+            // var iObj = getIndicesByHeading(data[0]);
+            return data;
+        }
+    }
+}
 function updateRoster() {
     // get seis data
-        // get seis data
-        var folder = DriveApp.getFolderById('1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0');
-        var files = folder.getFiles();
-        var fileIds = [];
-        // looking for .csv file
-        var found = false;
-        while (files.hasNext() && found == false) {
-            var file = files.next();
-            var fileName = file.getName();
-            var status; // '1' if parse function is successful
-            if (fileName.toString().search(/roster_seis.csv/) !== -1) {
-                found = true;
-                var csvFile = file.getBlob().getDataAsString();
-                fileIds.push(file.getId());
-                var seisData = Utilities.parseCsv(csvFile);
-                var iObj = getIndicesByHeading(seisData[0]);
-                var seisLocalSheet = ss.getSheetByName('roster_seis');
-                var seisLocalRange = seisLocalSheet.getRange(1, 1, seisData.length, seisData[0].length);
-                seisLocalSheet.clear();
-                seisLocalRange.setValues(seisData);
-            }
-        }
-        var [headings, values, sheet, range, lastR, lastC] = get('roster_seis');
+    // get seis data
+    var [headings, values, sheet, range, lastR, lastC] = get('roster_seis');
     
-    var [seisHeadings_1, seisValues, seisSheet, seisRange, seisLastR, seisLastC] = get('roster_seis');
+    var seisValues = parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "roster_seis.csv");
+    var seisHeadings_1 = seisValues.shift();
 
     var seisHeadings = seisHeadings_1.map(function (x, n, arr) {
         return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase()
     });
 
     var prefOrder = [];
-    prefOrder.push("seis_id", "last_name", "first_name", "date_of_birth", "case_manager","gender", "grade_code", "date_of_last_annual_plan_review", "date_of_next_annual_plan_review", "date_of_last_eligibility_evaluation", "date_of_next_eligibility_evaluation", "date_of_initial_parent_consent", "parent_guardian_1_name", "parent_1_email", "parent_1_cell_phone", "parent_1_home_phone", "parent_1_work_phone_h1", "parent_1_other_phone", "parent_1_mail_address", "parent_1_mail_city", "parent_1_mail_zip", "disability_1_code","disability_2_code");
+    prefOrder.push("seis_id", "last_name", "first_name", "date_of_birth", "case_manager", "gender", "grade_code", "date_of_last_annual_plan_review", "date_of_next_annual_plan_review", "date_of_last_eligibility_evaluation", "date_of_next_eligibility_evaluation", "date_of_initial_parent_consent", "parent_guardian_1_name", "parent_1_email", "parent_1_cell_phone", "parent_1_home_phone", "parent_1_work_phone_h1", "parent_1_other_phone", "parent_1_mail_address", "parent_1_mail_city", "parent_1_mail_zip", "disability_1_code", "disability_2_code");
     if (seisHeadings.length !== prefOrder.length) {
         throw "There is a missing or extra field name somewhere. The var prefOrder has a length of " + prefOrder.length + "; headings has a length of " + seisHeadings.length + ".";
     }
