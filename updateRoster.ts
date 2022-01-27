@@ -1,26 +1,5 @@
 // Compiled using dan-cl-retry 1.0.0 (TypeScript 4.5.4)
 // Compiled using undefined undefined (TypeScript 4.5.2)
-function parseCSV(folderId, fName) {
-    var folder = DriveApp.getFolderById(folderId);
-    var files = folder.getFiles();
-    var fileIds = [];
-    // looking for .csv file
-    var found = false;
-    while (files.hasNext() && found == false) {
-        var file = files.next();
-        var fileName = file.getName();
-        var status; // '1' if parse function is successful
-        var re = new RegExp(fName);
-        if (fileName.toString().search(re) !== -1) {
-            found = true;
-            var csvFile = file.getBlob().getDataAsString();
-            fileIds.push(file.getId());
-            var data = Utilities.parseCsv(csvFile);
-            // var iObj = getIndicesByHeading(data[0]);
-            return data;
-        }
-    }
-}
 function updateRoster() {
     // get seis data
     // get seis data
@@ -71,6 +50,7 @@ function updateRoster() {
 
     var merged = getFromAeriesData(newDataWithHeadings);
 
+
     // Logger.log(JSON.stringify(newData));
 
     // var seis_aeries_merge = getFromAeriesData(newDataWithHeadings);
@@ -79,6 +59,28 @@ function updateRoster() {
     destRng.setValues(merged);
 
     updateLogForm();
+}
+
+function parseCSV(folderId, fName) {
+    var folder = DriveApp.getFolderById(folderId);
+    var files = folder.getFiles();
+    var fileIds = [];
+    // looking for .csv file
+    var found = false;
+    while (files.hasNext() && found == false) {
+        var file = files.next();
+        var fileName = file.getName();
+        var status; // '1' if parse function is successful
+        var re = new RegExp(fName);
+        if (fileName.toString().search(re) !== -1) {
+            found = true;
+            var csvFile = file.getBlob().getDataAsString();
+            fileIds.push(file.getId());
+            var data = Utilities.parseCsv(csvFile);
+            // var iObj = getIndicesByHeading(data[0]);
+            return data;
+        }
+    }
 }
 
 function matchRosterFieldsToSeis(rosH, seisH) {

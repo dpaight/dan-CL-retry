@@ -90,6 +90,8 @@ function sendLevelsForm(stuName, stuId, teachemail) {
 //         .setProperty('lastId', id.toString());
 //     return id;
 // }
+
+
 function doGet(e) {
   ss.getSheetByName('roster').sort(2);
   ss.getSheetByName('logRespMerged').sort(1);
@@ -673,8 +675,8 @@ function printSelectedLogEntries(stuName, sDate, eDate, array) {
 function getTableData_roster() {
   var [headings, values, sheet, range, lastR, lastC] = get('roster');
   lastR = (lastR > 1) ? lastR : 2;
-  var values = sheet.getRange(1, 1, lastR - 1, lastC).getDisplayValues();
-  values.shift();
+  var values = sheet.getRange(2, 1, lastR - 1, lastC).getDisplayValues();
+  // values.shift();
   values.sort(function (a, b) {
     if (a[1] > b[1]) {
       return 1;

@@ -1145,11 +1145,6 @@
 
 
 
-  function reloadMe() {
-    sessionStorage.clear();
-    google.script.run.withSuccessHandler(function (url) { window.open(url, "_self"); })
-      .getScriptURL();
-  }
 
   // function reloadMe() {
   //   google.script.run
@@ -1265,11 +1260,19 @@
       google.script.run
         .withSuccessHandler(putInLogEntry)
         .lookForTeachers(id, false);
-
     }
-
   }
   function putInLogEntry(data) {
     $("#logEntry").val(data);
   }
+  function reloadMe() {
+    sessionStorage.clear();
+    google.script.run.withSuccessHandler(function (url) { window.open(url, "_self"); }).getScriptURL();
+  }
+  // function reloadMe() {
+  //   sessionStorage.clear();
+  //   google.script.run.withSuccessHandler(function (url) { window.open(url, "_self"); })
+  //     .getScriptURL();
+  // }
+
 </script>

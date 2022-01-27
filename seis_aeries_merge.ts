@@ -3,20 +3,26 @@ function runUpdateForTest() {
 }
 function getFromAeriesData(newDataWithHeadings) {
     var merged = [[
-        "seis_id", "last_name", "first_name", "date_of_birth", "case_manager", "gender", "grade_code", "date_of_last_annual_plan_review", "date_of_next_annual_plan_review", "date_of_last_eligibility_evaluation", "date_of_next_eligibility_evaluation", "date_of_initial_parent_consent", "parent_guardian_1_name", "parent_1_email", "parent_1_cell_phone", "parent_1_home_phone", "parent_1_work_phone_h1", "parent_1_other_phone", "parent_1_mail_address", "parent_1_mail_city", "parent_1_mail_zip", "disability_1_code", "disability_2_code", "nmjdob", "student_id", "tchr_num", "teachname", "total_minutes___frequency", "frequency", "location", "firstname_lastname", "langflu", "corrlng", "teachemail", "stuemail", "firslinit"
+        "seis_id", "last_name", "first_name", "date_of_birth", "case_manager", "gender", "grade_code", "date_of_last_annual_plan_review", "date_of_next_annual_plan_review", "date_of_last_eligibility_evaluation", "date_of_next_eligibility_evaluation", "date_of_initial_parent_consent", "parent_guardian_1_name", "parent_1_email", "parent_1_cell_phone", "parent_1_home_phone", "parent_1_work_phone_h1", "parent_1_other_phone", "parent_1_mail_address", "parent_1_mail_city", "parent_1_mail_zip", "disability_1_code", "disability_2_code", "nmjdob", "student_id", "tchr_num", "teachname", "total_minutes___frequency", "frequency", "location", "firstname_lastname", "langflu", "corrlng", "teachemail", "stuemail", "firslinit", "allServices"
     ]];
     var [aerHeadings_1, aerValues, aerSheet, aerRange, aerLastR, aerLastC] = get('allPupilsFromAeries');
-    
+    var [noteheadings, notevalues, notesheet, noterange, notelastR, notelastC] = get('notes');
+
     var aerHeadings = aerHeadings_1.map(function (x, n, arr) {
         return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase()
     });
 
-    var [servicesHeadings_1, servicesValues, servicesSheet, servicesRange, servicesLastR, servicesLastC] = get('services');
-
+    var servicesValues = parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "services.csv");
+    var servicesHeadings_1 = servicesValues.shift();
     var servicesHeadings = servicesHeadings_1.map(function (x, n, arr) {
-        return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase()
+        return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase();
     });
 
+
+    // var [servicesHeadings_1, servicesValues, servicesSheet, servicesRange, servicesLastR, servicesLastC] = get('services');
+    // var servicesHeadings = servicesHeadings_1.map(function (x, n, arr) {
+    //     return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase();
+    // });
     // make these variables:
     // 
     // var notUsedCount = merged[0].lastIndexOf("notused") + 1 - merged[0].indexOf("notused");
@@ -25,7 +31,7 @@ function getFromAeriesData(newDataWithHeadings) {
         var el = newDataWithHeadings[i];
 
         var [
-            seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
+            seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit, allServices
         ] = el;
 
         // fill unused fields as needed
@@ -34,7 +40,7 @@ function getFromAeriesData(newDataWithHeadings) {
         // }
 
         // these are the fields to create for each record
-        var nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit;
+        var nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit, allServices;
 
         nmjdob = makeNmjdob(first_name, last_name, date_of_birth);
         function makeNmjdob(fn, ln, dob) {
@@ -63,6 +69,29 @@ function getFromAeriesData(newDataWithHeadings) {
                     return servicesEl[fieldIndex];
                 }
             }
+        }
+
+        function gatherAllServices(seis_id) {
+            var allServ = "\n<< \n";
+            for (let i = 0; i < servicesValues.length; i++) {
+                const servicesEl = servicesValues[i];
+                if (servicesEl[6] == "No" && seis_id == servicesEl[servicesHeadings.indexOf("seis_id")]) {
+                    allServ += servicesEl[4] + ", " + servicesEl[5] + "\n";
+                }
+            }
+            allServ += ">>\n";
+            for (let n = 0; n < notevalues.length; n++) {
+                const nel = notevalues[n];
+                if (nel[0].toString() == seis_id.toString()) {
+                    if (nel[1].toString().indexOf("<<") == -1) {
+                        var newNote = nel[1].toString() + allServ;
+                    } else {
+                        newNote = nel[1].toString().replace(/(<<.*\n*.*\n>>)/gm, allServ).replace(/\n+/gm, "\n").replace(/^\n+/gm, "");
+                        notevalues[n].splice(1, 1, newNote);
+                    }
+                }
+            }
+            return allServ;
         }
 
         student_id = aerLookup(nmjdob, aerHeadings.indexOf("student_id"));
@@ -101,12 +130,23 @@ function getFromAeriesData(newDataWithHeadings) {
         firslinit = el[newDataWithHeadings[0].indexOf("first_name")] + " " + el[newDataWithHeadings[0].indexOf("last_name")][0];
         el.push(firslinit);
 
+        allServices = gatherAllServices(seis_id);
+        el.push(allServices);
+
         merged.push(el);
+
+
     }
+    // notevalues = noteheadings.concat(notevalues);
+    var notesDest = ss.getSheetByName("notes");
+    var notesRange = notesDest.getRange(2, 1, notevalues.length, notevalues[0].length);
+    notesRange.setValues(notevalues);
+
     // var testingDest = ss.getSheetByName('testingDest').getRange(1, 1, merged.length, merged
     // [0].length);
     // testingDest.clearContent();
     // SpreadsheetApp.flush();
     // testingDest.setValues(merged);
+
     return merged;
 }
