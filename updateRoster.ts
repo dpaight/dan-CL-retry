@@ -3,11 +3,12 @@
 function updateRoster() {
     // get seis data
     // get seis data
-    var [headings, values, sheet, range, lastR, lastC] = get('roster_seis');
     
     var seisValues = parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "roster_seis.csv");
+    
     var seisHeadings_1 = seisValues.shift();
-
+    
+    var [headings, values, sheet, range, lastR, lastC] = get('roster_seis');
     var seisHeadings = seisHeadings_1.map(function (x, n, arr) {
         return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase()
     });
@@ -71,8 +72,8 @@ function parseCSV(folderId, fName) {
         var file = files.next();
         var fileName = file.getName();
         var status; // '1' if parse function is successful
-        var re = new RegExp(fName);
-        if (fileName.toString().search(re) !== -1) {
+        var re = /(fName)/;
+        if (fileName.toString()== fName.toString()) {
             found = true;
             var csvFile = file.getBlob().getDataAsString();
             fileIds.push(file.getId());

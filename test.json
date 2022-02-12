@@ -1,0 +1,56 @@
+groups = {
+    "grp3": {
+        "gId": "3",
+        "start": "1899-12-30T16:00:00.000Z",
+        "end": "1899-12-30T16:30:00.000Z",
+        "mins": "1899-12-30T08:30:00.000Z",
+        "days": "1,2,4,5",
+        "topics": "topic 3",
+        "topicsDescr": "topic 3 described"
+    },
+    "grp5": {
+        "gId": "5",
+        "start": "1899-12-30T16:40:00.000Z",
+        "end": "1899-12-30T17:10:00.000Z",
+        "mins": "1899-12-30T08:30:00.000Z",
+        "days": "1,2,4,5",
+        "topics": "topic 5",
+        "topicsDescr": "topic 5 described"
+    },
+    "grp1": {
+        "gId": "1",
+        "start": "1899-12-30T17:20:00.000Z",
+        "end": "1899-12-30T17:50:00.000Z",
+        "mins": "1899-12-30T08:30:00.000Z",
+        "days": "1,4",
+        "topics": "topic 1",
+        "topicsDescr": "topic 1 described"
+    },
+    "grp4": {
+        "gId": "4",
+        "start": "1899-12-30T18:00:00.000Z",
+        "end": "1899-12-30T18:30:00.000Z",
+        "mins": "1899-12-30T08:30:00.000Z",
+        "days": "2,5",
+        "topics": "topic 4",
+        "topicsDescr": "topic 4 described"
+    },
+    "grp2": {
+        "gId": "2",
+        "start": "1899-12-30T18:40:00.000Z",
+        "end": "1899-12-30T19:10:00.000Z",
+        "mins": "1899-12-30T08:30:00.000Z",
+        "days": 3,
+        "topics": "topic 2",
+        "topicsDescr": "topic 2 described"
+    },
+    "grp6": {
+        "gId": "6",
+        "start": "1899-12-30T19:20:00.000Z",
+        "end": "1899-12-30T19:50:00.000Z",
+        "mins": "1899-12-30T08:30:00.000Z",
+        "days": "1,5",
+        "topics": "topic 6",
+        "topicsDescr": "topic 6 described"
+    }
+}   

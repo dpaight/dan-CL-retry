@@ -244,7 +244,7 @@
       document.body.style.cursor = "wait";
       var id = $("#seis_id").val();
       google.script.run
-        .withSuccessHandler(reloadMe)
+        .withSuccessHandler()
         .updateRoster();
     });
     $("body").on("click", "#search", function () {
@@ -1265,7 +1265,7 @@
   function putInLogEntry(data) {
     $("#logEntry").val(data);
   }
-  function reloadMe() {
+  function reloadMe(url) {
     sessionStorage.clear();
     google.script.run.withSuccessHandler(function (url) { window.open(url, "_self"); }).getScriptURL();
   }

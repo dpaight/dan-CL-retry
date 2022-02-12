@@ -1018,7 +1018,7 @@ function addMatchVarColOne(array) {
     for (const key in searchItems) {
       if (Object.prototype.hasOwnProperty.call(searchItems, key)) {
         const element = searchItems[key];
-        if (element == -1 && el.toString().toLowerCase().search(new RegExp(key)) != -1) {
+        if (element == -1 && el.toString().toLowerCase().search(/(key)/) != -1) {
           searchItems[key] = i;
         }
       }

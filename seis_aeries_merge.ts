@@ -127,7 +127,7 @@ function getFromAeriesData(newDataWithHeadings) {
         stuemail = aerLookup(nmjdob, aerHeadings.indexOf("stuemail"));
         el.push(stuemail);
 
-        firslinit = el[newDataWithHeadings[0].indexOf("first_name")] + " " + el[newDataWithHeadings[0].indexOf("last_name")][0];
+        firslinit = el[newDataWithHeadings[0].indexOf("first_name")] + " " + el[newDataWithHeadings[0].indexOf("last_name")][0] + ".";
         el.push(firslinit);
 
         allServices = gatherAllServices(seis_id);
