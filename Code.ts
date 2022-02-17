@@ -1689,6 +1689,33 @@ function getStuFolder(fname = "Jeremiah", lname = "Harrison") {
   var newFolder = parentFolder.createFolder(fname + " " + lname);
   return newFolder.getUrl();
 }
+function makeInstructionalNotesFiles() {
+  var [headings, values, sheet, range, lastR, lastC] = get('roster');
+
+  for (let i = 0; i < values.length; i++) {
+    const el = values[i];
+    var instrntsPresent = 0;
+    var fname = el[2];
+    var lname = el[1];
+    var instrNotes = DriveApp.getFolderById("13cZ2z5gmxNfTU_N2ko14XYQ9vPD_Ju0d");
+    var instrNotesFiles = instrNotes.getFiles();
+    while (instrNotesFiles.hasNext()) {
+      var instrNotesFile = instrNotesFiles.next();
+      var instrNotesFileName = instrNotesFile.getName().toLowerCase();
+      if (instrNotesFileName.search(fname) > -1 && instrNotesFileName.search(lname) > -1) {
+        // file found; 
+        instrntsPresent = 1;
+        break;
+      }
+    }
+    if (instrntsPresent == 0) {
+      var newDoc = DocumentApp.create(fname + " " + lname + " " + "instrnotes");
+      var newDocID = newDoc.getId();
+      var newDocFile = DriveApp.getFileById(newDocID);
+      newDocFile.moveTo(instrNotes);
+    }
+  }
+}
 
 
 //# sourceMappingURL=module.jsx.map
