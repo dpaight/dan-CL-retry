@@ -1647,9 +1647,9 @@ function parseClassListReport() {
   drange.setValues(parsed);
 }
 
-function getStuFolder(fname, lname) {
-  fname = fname.toLowerCase();   
-  lname = lname.toLowerCase();   
+function getStuFolder(fname = "Jeremiah", lname = "Harrison") {
+  fname = fname.toLowerCase();
+  lname = lname.toLowerCase();
   var parentFolder = DriveApp.getFolderById("0B3J9971qOaVIUUlCWXRCbTNjcUE");
   var folders = parentFolder.getFolders();
   while (folders.hasNext()) {
@@ -1657,6 +1657,32 @@ function getStuFolder(fname, lname) {
     var folderName = folder.getName().toLowerCase();
     if (folderName.search(fname) > -1 && folderName.search(lname) > -1) {
       var url = folder.getUrl();
+      // check for presence of instructional notes
+      var iepRelFiles = folder.getFiles();
+      var instrntsPresent = 0
+      while (iepRelFiles.hasNext()) {
+        var iepFile = iepRelFiles.next();
+        var iepFileName = iepFile.getName().toLocaleLowerCase();
+        if (iepFileName.search('instrnotes') > -1) {
+          instrntsPresent = 1;
+          break;
+        }
+        instrntsPresent = 0;
+      }
+      if (instrntsPresent == 0) {
+        var instrNotes = DriveApp.getFolderById("13cZ2z5gmxNfTU_N2ko14XYQ9vPD_Ju0d");
+        var instrNotesFiles = instrNotes.getFiles();
+        while (instrNotesFiles.hasNext()) {
+          var instrNotesFile = instrNotesFiles.next();
+          var instrNotesFileName = instrNotesFile.getName().toLowerCase();
+          if (instrNotesFileName.search(fname) > -1 && instrNotesFileName.search(lname) > -1) {
+            var instrNotesFileID = instrNotesFile.getId();
+            var shortcut = DriveApp.createShortcut(instrNotesFileID);
+            folder.addFile(shortcut);
+            break;
+          }
+        }
+      }
       return url;
     }
   }

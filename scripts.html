@@ -407,6 +407,7 @@
 
   function contactInfo(id) {
     if (!id) {
+      alert('no id supplied at contactInfo("id")');
       id = google.script.run
         .withSuccessHandler(contactInfo)
         .getFirstPointer();
@@ -594,7 +595,7 @@
     $("#teachemail").val(teachemail);
 
     console.log('nmjdob = %s', nmjdob);
-    console.log('nmjdob = %s', $("#nmjdob").val());
+    // console.log('nmjdob = %s', $("#nmjdob").val());
 
     if ($("#corrlng").val() == 1) {
       $("#corrlng").css("background-color", "#FF0000");
