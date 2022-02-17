@@ -3,11 +3,11 @@
 function updateRoster() {
     // get seis data
     // get seis data
-    
-    var seisValues = parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "roster_seis.csv");
-    
+
+    var seisValues = parseCSV("1DLxHwR7QlDloES0RCAkuN2bBawdAaAp9", "roster_seis.csv");
+
     var seisHeadings_1 = seisValues.shift();
-    
+
     var [headings, values, sheet, range, lastR, lastC] = get('roster_seis');
     var seisHeadings = seisHeadings_1.map(function (x, n, arr) {
         return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase()
@@ -58,8 +58,9 @@ function updateRoster() {
     var dest = ss.getSheetByName('roster');
     var destRng = dest.getRange(1, 1, merged.length, merged[0].length);
     destRng.setValues(merged);
-
-    updateLogForm();
+    SpreadsheetApp.flush();
+    // Utilities.sleep(5000);
+    return ScriptApp.getService().getUrl().toString();
 }
 
 function parseCSV(folderId, fName) {
@@ -73,7 +74,7 @@ function parseCSV(folderId, fName) {
         var fileName = file.getName();
         var status; // '1' if parse function is successful
         var re = /(fName)/;
-        if (fileName.toString()== fName.toString()) {
+        if (fileName.toString() == fName.toString()) {
             found = true;
             var csvFile = file.getBlob().getDataAsString();
             fileIds.push(file.getId());
@@ -140,6 +141,46 @@ function getAeriesData() {
     var destR = ss.getSheetByName('roster')
         .getRange(2, 1, values.length, values[0].length);
     destR.setValues(values);
+}
+
+function updateContactInfo(seisId, fldNm, fieldVal) {
+    var [headings, values, sheet, range, lastR, lastC] = get('roster');
+    var data = [];
+    for (let i = 0; i < values.length; i++) {
+        const el = values[i];
+        // get the index of the seis_id field
+        var si = headings.indexOf("seis_id");
+        if (el[si].toString() == seisId.toString()) {
+            // get the index of the edited field
+            try {
+                const fi = headings.indexOf(fldNm);
+                var destCell = sheet.getRange(i + 2, fi + 1, 1, 1);
+                destCell.setValue(fieldVal);
+                data.push([seisId, fi, fieldVal]);
+                // if it's a meeting date, update the other "next" date
+                if (fldNm == "date_of_last_annual_plan_review") {
+                    const fi = headings.indexOf("date_of_next_annual_plan_review");
+                    var destCell = sheet.getRange(i + 2, fi + 1, 1, 1);
+                    destCell.setValue(moment(fieldVal, "MM/DD/YYYY").add(1, "y").format("MM/DD/YYYY"));
+                    data.push([seisId, fi, fieldVal]);
+                }
+                if (fldNm == "date_of_last_eligibility_evaluation") {
+                    const fi = headings.indexOf("date_of_next_eligibility_evaluation");
+                    var destCell = sheet.getRange(i + 2, fi + 1, 1, 1);
+                    destCell.setValue(moment(fieldVal, "MM/DD/YYYY").add(3, "y").format("MM/DD/YYYY"));
+                    data.push([seisId, fi, fieldVal]);
+                }
+                SpreadsheetApp.flush();
+                Logger.log('data = %s', JSON.stringify(data));
+                return data;
+
+            } catch (error) {
+                alert(error);
+                return false;
+            }
+        }
+    }
+
 }
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map

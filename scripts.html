@@ -150,11 +150,37 @@
       // console.log('mouse up');
     });
 
+    // record edited fields 
+    $("body").on("change", ".stuEdit", function () {
+      var seisId = $("#seis_id").val();
+      var fieldVal = $(this).val();
+      var fldNm = $(this).attr("data-fldNm");
+
+      if (!seisId || !fieldVal || !fldNm) {
+        alert("missing data in html");
+        return;
+      }
+      // sessionStorage.removeItem('rec' + seisId);
+      // alert('rec' + seisId + ", " + seisId + ", " + fieldVal + ", " + fldNm);
+      if (fldNm.toString().search(/date/g) > -1) {
+        fieldVal = fieldVal.toString().replace(/-/g, "/");
+        $(this).val(fieldVal);
+      }
+      google.script.run
+        .withSuccessHandler(updateLocalStorage)
+        .updateContactInfo(seisId, fldNm, fieldVal);
+
+      setTimeout(() => {
+        google.script.run
+          .withSuccessHandler(showRosterTable)
+          .getTableData_roster();
+      }, 3000);
+
+    });
 
     $("body").on("change", ".logWindow", function () {
       filterLogEntriesByDateWindow()
     });
-
     //save changes to spreadsheet
     $("body").on("change", "#notes2", function (event) {
       var id = $("#seis_id").val();
@@ -165,14 +191,28 @@
       google.script.run
         .withSuccessHandler(showNotes) // works with returned values: id, index, value
         .getNotes([id, value]);
-
     });
     function updateLocalStorage(array) {
-      var [id, index, value] = array;
-      var cachedRecord = JSON.parse(sessionStorage.getItem('rec' + id));
-      cachedRecord.splice(index, 1, value);
+      var cachedRecString = sessionStorage.getItem('rec' + array[0][0].toString());
+      console.log('id = %s', JSON.stringify(array[0]));
+      var cachedRecord = JSON.parse(sessionStorage.getItem('rec' + array[0][0].toString()));
+      for (let i = 0; i < array.length; i++) {
+        const el = array[i];
+        var [id, index, value] = el;
+        console.log('el = %s', JSON.stringify(el));
+        cachedRecord.splice(index, 1, value);
+      }
       console.log('stored: %s', JSON.stringify(cachedRecord));
       sessionStorage.setItem('rec' + id, JSON.stringify(cachedRecord));
+
+      $("#loc00tb").empty();
+      google.script.run
+        .withSuccessHandler(showRosterTable)
+        .getTableData_roster();
+
+      // google.script.run
+      //   .withSuccessHandler(showContactInfo)
+      //   .getRecord(id);
     }
 
     // save all data in changeable fields in the  spreadsheet
@@ -240,12 +280,17 @@
     });
 
     // retrieves data from a seis generated csv file (seis search report)
-    $("body").on("click", "#seis_roster", function () {
+    $("body").on("click", "#seis_roster", function (event) {
+      event.preventDefault();
       document.body.style.cursor = "wait";
       var id = $("#seis_id").val();
       google.script.run
-        .withSuccessHandler()
+        .withSuccessHandler(reloadMe)
         .updateRoster();
+      setTimeout(() => {
+        "google.script.run.updateLogForm();"
+      }, 15000);
+
     });
     $("body").on("click", "#search", function () {
       var id = $("#seis_id").val();
@@ -287,10 +332,10 @@
       //       console.log('email address is: %s', emadr);
 
     });
-
     startup();
-
   });
+
+
 
 
   // named functions
@@ -310,23 +355,23 @@
       document.body.style.cursor = "wait";
       google.script.run
         .withSuccessHandler(showRosterTable)
-        .getTableData_roster(id);
+        .getTableData_roster();
 
       focus(id);
     }
-    function setPointerAndStart(id) {
-      setPointer(id);
-      //       console.log('setPointerAndStart ran');
-      // await sleep(2000);
-      document.body.style.cursor = "wait";
-      google.script.run
-        .withSuccessHandler(showRosterTable)
-        .getTableData_roster(id);
-
-      focus(id);
-    }
-
   }
+  function setPointerAndStart(id) {
+    setPointer(id);
+    //       console.log('setPointerAndStart ran');
+    // await sleep(2000);
+    document.body.style.cursor = "wait";
+    google.script.run
+      .withSuccessHandler(showRosterTable)
+      .getTableData_roster(id);
+
+    focus(id);
+  }
+
 
   function focus(id = getPointer()) {
     setPointer(id);
@@ -507,7 +552,9 @@
       //       console.log('parsed json');
       record = JSON.parse(record);
     }
-
+    function shortDate(dateObj) {
+      return moment(dateObj).format("MM/DD/YYYY");
+    }
     var [
       seis_id, last_name, first_name, date_of_birth, case_manager, gender, grade_code, date_of_last_annual_plan_review, date_of_next_annual_plan_review, date_of_last_eligibility_evaluation, date_of_next_eligibility_evaluation, date_of_initial_parent_consent, parent_guardian_1_name, parent_1_email, parent_1_cell_phone, parent_1_home_phone, parent_1_work_phone_h1, parent_1_other_phone, parent_1_mail_address, parent_1_mail_city, parent_1_mail_zip, disability_1_code, disability_2_code, nmjdob, student_id, tchr_num, teachname, total_minutes___frequency, frequency, location, firstname_lastname, langflu, corrlng, teachemail, stuemail, firslinit
     ] = record;
@@ -518,9 +565,11 @@
 
     $("#disability_1_code").val(disability_1_code);
     $("#disability_2_code").val(disability_2_code);
-    $("#date_of_last_eligibility_evaluation").val(date_of_last_eligibility_evaluation);
-    $("#date_of_last_annual_plan_review").val(date_of_last_annual_plan_review);
+    $("#date_of_last_eligibility_evaluation").val(shortDate(date_of_last_eligibility_evaluation));
+    $("#date_of_last_annual_plan_review").val(shortDate(date_of_last_annual_plan_review));
     $("#husd_id").val(student_id);
+    $("#first_name").val(first_name);
+    $("#last_name").val(last_name);
 
     $("#langflu").val(langflu);
     $("#corrlng").val(corrlng);
@@ -837,14 +886,14 @@
       if (!seis_id) {
         alert(" has no id"); // lnCmafn + 
       } else {
-        if (moment(date_of_last_eligibility_evaluation).isValid() == false) {
+        if (moment(date_of_next_eligibility_evaluation).isValid() == false) {
           var evalDate = moment(date_of_initial_parent_consent).add(1, 's').format('YYYY-MM-DD');
           pending = ['#f4cccc', '#000000'];
-        } else if (moment(date_of_last_eligibility_evaluation).add(3, 'y').isBefore(moment().add(6, 'month'))) {
-          evalDate = moment(date_of_last_eligibility_evaluation).format('YYYY-MM-DD');
+        } else if (moment(date_of_next_eligibility_evaluation).add(3, 'y').isBefore(moment().add(6, 'month'))) {
+          evalDate = moment(date_of_next_eligibility_evaluation).format('YYYY-MM-DD');
           pending = ['#d9ead3', '#000000'];
         } else {
-          evalDate = moment(date_of_last_eligibility_evaluation).format('YYYY-MM-DD');
+          evalDate = moment(date_of_next_eligibility_evaluation).format('YYYY-MM-DD');
           pending = ['#FFFFFF', '#000000'];
         }
         // console.log('evalDate hello is %s for %s', evalDate, first_name);
@@ -856,7 +905,7 @@
           "</td>" +
           '<td class="tableDate setStudent col-3" data-stuId=' +
           seis_id + '>' +
-          moment(date_of_last_annual_plan_review).format('YYYY-MM-DD') +
+          moment(date_of_next_annual_plan_review).format('YYYY-MM-DD') +
           "</td>" +
           '<td class="tableDate setStudent col-3" style="background-color:' + pending[0] + '; color:' + pending[1] + ';" data-stuId=' +
           seis_id + '>' +
@@ -1143,17 +1192,6 @@
     showLog(logs, 'loc01');
   }
 
-
-
-
-  // function reloadMe() {
-  //   google.script.run
-  //     .withSuccessHandler(function (url) {
-  //       window.open(url, '_top');
-  //     })
-  //     .getScriptURL();
-  // }
-
   function deleteRecord() {
     $('#genericModal').modal({ focus: true });
     $('#genericModalMsg').html("Remove this record?");
@@ -1265,14 +1303,25 @@
   function putInLogEntry(data) {
     $("#logEntry").val(data);
   }
-  function reloadMe(url) {
+  function clearCache() {
     sessionStorage.clear();
-    google.script.run.withSuccessHandler(function (url) { window.open(url, "_self"); }).getScriptURL();
   }
-  // function reloadMe() {
-  //   sessionStorage.clear();
-  //   google.script.run.withSuccessHandler(function (url) { window.open(url, "_self"); })
-  //     .getScriptURL();
-  // }
+  function reloadMe(url) {
+    // return ScriptApp.getService().getUrl().toString();
 
+    $('body').html('<a style="font-size: 3rem;  position: fixed; top:20%; left:20%;" href=' + url + '>Click to reload.</a>');
+  }
+  function findStuFolder() {
+    var id, fname, lname;
+    id = $("#seis_id").val();
+    fname = $("#first_name").val();
+    lname = $("#last_name").val();
+
+    google.script.run
+      .withSuccessHandler(openFolder)
+      .getStuFolder(fname, lname);
+  }
+  function openFolder(url) {
+    window.open(url, target="_blank");
+  }
 </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <base target="self">
+  <base target="top">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -60,10 +60,9 @@
 
   <!-- Navigation bar -->
   <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-primary" style="z-index: 2000;">
-    <a class="navbar-brand data-toggle" href="#" title="clear session cache and reload" onclick="reloadMe()"
-      style="font-weight: 500;">CASE LOGS
+    <p class="navbar-brand data-toggle hiddenReload"  title="clear session cache and reload"  style="font-weight: 500;" onclick="clearCache()" >CASE LOGS
       <?=version?>
-    </a>
+    </p>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -93,7 +92,7 @@
             List</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#" id="seis_roster">UpdateRoster</a>
+          <a class="nav-link active" href="" id="seis_roster">UpdateRoster</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -142,10 +141,10 @@
                     Name
                   </th>
                   <th scope='col' class=' col-3' onclick="sortTable('rosterList',1)">
-                    Annual
+                    NxtAnl
                   </th>
                   <th scope='col' class='col-3' onclick="sortTable('rosterList',2)">
-                    Tri/<div style='color:#ff3939;'>InitConsent</div>
+                    NxtTri/<div style='color:#ff3939;'>InitConsent</div>
                   </th>
                 </tr>
                 <!-- insert headings for due dates table -->
@@ -161,7 +160,7 @@
       </div>
 
       <!-- card for general info -->
-      <div class="card col-sm-12 col-lg-3 col-md-6  stuInfo d-flex p-0 m-0" style="background-color: white;">
+      <div class="card col-sm-12 col-lg-3 col-md-6  d-flex p-0 m-0 " style="background-color: white;">
         <div class="card-header d-flex">
 
           <h6 class="m-1">Current Student</h6>
@@ -178,23 +177,27 @@
               <div class="form-row">
                 <div class="input-group input-group-sm mx-1 my-2">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="stuName-pre">Name</span>
+                    <span class="input-group-text " id="stuName-pre">Name</span>
                   </div>
-                  <input type="text" class="form-control" id="stuName"
-                    style="color: blue; font-size: x-large; font-weight: bold;" readonly value="">
+                  <input type="text" class="form-control " id="stuName"
+                    style="color: blue; font-size: 1rem; font-weight: bold;"  value="">
+                    <input type="text" class="form-control " id="first_name"
+                    style="color: blue; font-size: 1rem; font-weight: bold;" hidden value="">
+                    <input type="text" class="form-control " id="last_name"
+                    style="color: blue; font-size: 1rem; font-weight: bold;" hidden value="">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="input-group input-group-sm mx-1 my-2">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="dob-pre">DOB </span>
+                    <span class="input-group-text " id-s="dob-pre">DOB </span>
                   </div>
-                  <input type="text" class="form-control" id="dob" readonly value="">
+                  <input type="text" class="form-control stuEdit " id="dob" readonly value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="sex-pre">Sex </span>
                   </div>
-                  <input type="text" class="form-control" id="sex" readonly value="">
+                  <input type="text" class="form-control stuEdit" id="sex" data-fldNm="gender" value="">
                 </div>
               </div>
 
@@ -202,54 +205,54 @@
               <div class="form-row">
                 <div class="input-group input-group-sm mx-1 my-2">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="tch-pre">Teacher</span>
+                    <span class="input-group-text " id="tch-pre">Teacher</span>
                   </div>
-                  <input type="text" class="form-control" id="teachname" readonly value="">
-                  <input type="text" class="form-control" id="teachemail" readonly value="" hidden>
+                  <input type="text" class="form-control stuEdit " data-fldNm="teachname" id="teachname"  value="">
+                  <input type="text" class="form-control stuEdit " data-fldNm="teachemail" id="teachemail"  value="" hidden>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="input-group input-group-sm mx-1 my-2">
                   <div class="input-group-prepend success">
-                    <span class="input-group-text" id="grade_code-pre">Grade</span>
+                    <span class="input-group-text " id="grade_code-pre">Grade</span>
                   </div>
-                  <input type="text" class="form-control" id="gradeCode" readonly value="">
+                  <input type="text" class="form-control stuEdit " data-fldNm="grade_code" id="gradeCode"  value="">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="corrlng-pre">CrLng</span>
+                    <span class="input-group-text " id="corrlng-pre">CrLng</span>
                   </div>
-                  <input type="text" class="form-control" id="corrlng" readonly value="">
+                  <input type="text" class="form-control stuEdit " id="corrlng"  value="">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="lang-pre">Lang</span>
+                    <span class="input-group-text " id="lang-pre">Lang</span>
                   </div>
-                  <input type="text" class="form-control" id="langflu" readonly value="">
+                  <input type="text" class="form-control stuEdit " id="langflu"  value="">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="input-group input-group-sm mx-1 my-2">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="disability_1_code-pre">Dis1</span>
+                    <span class="input-group-text " id="disability_1_code-pre">Dis1</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="disability_1_code" readonly value="">
+                  <input type="text" title="" class="form-control stuEdit " data-fldNm='disability_1_code' id="disability_1_code"  value="">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="disability_2_code-pre2">Dis2</span>
+                    <span class="input-group-text " id="disability_2_code-pre2">Dis2</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="disability_2_code" readonly value="">
+                  <input type="text" title="" class="form-control stuEdit " data-fldNm='disability_2_code' id="disability_2_code"  value="">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="input-group input-group-sm mx-1 my-2">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="lastAnlDate-pre">Last Anl</span>
+                    <span class="input-group-text " id="lastAnlDate-pre">Last Anl</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="date_of_last_annual_plan_review" readonly
+                  <input type="text" title="" class="form-control stuEdit " data-fldNm='date_of_last_annual_plan_review' id="date_of_last_annual_plan_review" 
                     value="">
                   <div class="input-group-prepend">
-                    <span class="input-group-text" id="lastEvalDate-pre2">Last Eval</span>
+                    <span class="input-group-text " id="lastEvalDate-pre2">Last Eval</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="date_of_last_eligibility_evaluation" readonly
+                  <input type="text" title="" class="form-control stuEdit " data-fldNm='date_of_last_eligibility_evaluation' id="date_of_last_eligibility_evaluation" 
                     value="">
                 </div>
               </div>
@@ -269,11 +272,11 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="seis_id-pre">ID-s</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="seis_id" readonly value="">
+                  <input type="text" title="" class="form-control" id="seis_id"  readonly value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="husd_id-pre2">ID-h</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="husd_id" readonly value="">
+                  <input type="text" title="" class="form-control" id="husd_id"  readonly value="">
                 </div>
               </div>
 
@@ -282,14 +285,14 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="stuem-pre">StuEM</span>
                   </div>
-                  <input type="text" class="form-control" id="stuemail" readonly value="">
+                  <input type="text" class="form-control" id="stuemail"  readonly value="">
                 </div>
 
                 <div class="input-group input-group-sm mx-1 my-2     ml-0">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="parent_guardian_1_name-pre">Parents </span>
                   </div>
-                  <input type="text" class="form-control" id="parent_guardian_1_name" readonly value="">
+                  <input type="text" class="form-control" id="parent_guardian_1_name"  readonly value="">
                 </div>
               </div>
 
@@ -298,7 +301,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="parent_1_Home_Phone-pre">PH1</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="parent_1_home_phone" readonly value="">
+                  <input type="text" title="" class="form-control" id="parent_1_home_phone"  readonly value="">
                 </div>
               </div>
 
@@ -307,7 +310,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="mai-pre">EM1</span>
                   </div>
-                  <input type="text" class="form-control" id="parent_1_email" readonly value="">
+                  <input type="text" class="form-control" id="parent_1_email"  readonly value="">
                 </div>
               </div>
 
@@ -316,7 +319,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="addStr-pre2">Strt</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="addStr" readonly value="">
+                  <input type="text" title="" class="form-control" id="addStr"  readonly value="">
                 </div>
               </div>
 
@@ -325,11 +328,11 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="addCity-pre2">City</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="addCity" readonly value="">
+                  <input type="text" title="" class="form-control" id="addCity"  readonly value="">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="addZip-pre2">Zip</span>
                   </div>
-                  <input type="text" title="" class="form-control" id="addZip" readonly value="">
+                  <input type="text" title="" class="form-control" id="addZip"  readonly value="">
                 </div>
               </div>
               <input type="text" id="nmjdob" value="" hidden>
@@ -357,8 +360,7 @@
           <div class="card-footer">
             <button class="btn btn-sm btn-success" onclick="openAddStudentModal()" style="font-weight: bold;">+
               STUDENT</button>
-            <button id="search" class="btn btn-sm btn-success" onclick="openSrchModal()" style="font-weight: bold;">STU
-              SEARCH</button>
+            <button id="search" class="btn btn-sm btn-success" onclick="findStuFolder()" style="font-weight: bold;">Get Folder</button>
           </div>
         </div>
       </div>
@@ -473,55 +475,55 @@
           </div>
         </div>
         <div class="card-footer centerLabels">
-          <textarea id="tbSnippetCopy" class="inline-flex tbSnippet" name="clickCopy" readonly
+          <textarea id="tbSnippetCopy" class="inline-flex tbSnippet" name="clickCopy" 
             style="height: 3rem; width: 100%; margin: 0px; padding: 0px;"></textarea>
 
           <div class="d-flex" style="flex-wrap: wrap;">
             <div class="d-flex flex-column mx-2">
               <label for="gl-0"></label>
-              <input readonly name="gls" id="gl-0" title="" readonly type="text" value="" style="width:  30px;">
+              <input  name="gls" id="gl-0" title=""  type="text" value="" style="width:  30px;">
               gl-0
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-1"></label>
-              <input name="gls" id="gl-1" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-1" title="" type="text"  value="" style="width:  30px;">
               gl-1
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-2"></label>
-              <input name="gls" id="gl-2" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-2" title="" type="text"  value="" style="width:  30px;">
               gl-2
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-3"></label>
-              <input name="gls" id="gl-3" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-3" title="" type="text"  value="" style="width:  30px;">
               gl-3
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-4"></label>
-              <input name="gls" id="gl-4" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-4" title="" type="text"  value="" style="width:  30px;">
               gl-4
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-5"></label>
-              <input name="gls" id="gl-5" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-5" title="" type="text"  value="" style="width:  30px;">
               gl-5
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-6"></label>
-              <input name="gls" id="gl-6" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-6" title="" type="text"  value="" style="width:  30px;">
               gl-6
             </div>
             <div class="d-flex flex-column mx-2">
 
               <label for="gl-7"></label>
-              <input name="gls" id="gl-7" title="" type="text" readonly value="" style="width:  30px;">
+              <input name="gls" id="gl-7" title="" type="text"  value="" style="width:  30px;">
               gl-7
             </div>
           </div>
@@ -657,7 +659,7 @@
                 </div>
                 <div class="modal-footer">
                   <input id='glEditId' type='text' value='' style='background-color: lightyellow; width: 3rem;'
-                    readonly>
+                    >
                   <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">CANCEL</button>
                   <button type="button" class="btn btn-sm btn-success" data-dismiss="modal"
                     onclick="saveGoal(-1)">SAVE/NEW</button>
@@ -718,7 +720,7 @@
                   </div>
                   <div class="modal-footer">
                     <input id='glEditId' type='text' value='' style='background-color: lightyellow; width: 3rem;'
-                      readonly>
+                      >
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">CANCEL</button>
                     <button type="button" class="btn btn-sm btn-success" data-dismiss="modal"
                       onclick="addStu()">SAVE</button>
@@ -918,11 +920,11 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text" id="s_dob-pre">DOB </span>
                             </div>
-                            <input type="text" class="form-control spr col-5" id="s_dob" readonly value="">
+                            <input type="text" class="form-control spr col-5" id="s_dob"  value="">
                             <div class="input-group-prepend">
                               <span class="input-group-text" id="s_sex-pre">Sex </span>
                             </div>
-                            <input type="text" class="form-control spr col-3" id="s_sex" readonly value="">
+                            <input type="text" class="form-control spr col-3" id="s_sex"  value="">
 
                           </div>
 
@@ -931,8 +933,8 @@
                               <span class="input-group-text" id="s_tch-pre">Teacher</span>
 
                             </div>
-                            <input type="text" class="form-control spr" id="s_teachname" readonly value="">
-                            <input type="text" class="form-control spr" id="s_teach_email" readonly value="" hidden>
+                            <input type="text" class="form-control spr stuEdit" data-fldNm='teachname'  id="s_teachname"  value="">
+                            <input type="text" class="form-control spr" id="s_teach_email"  value="" hidden>
                           </div>
 
                           <div class="input-group input-group-sm m-1 col-12 mb-3">
@@ -947,7 +949,7 @@
                             <div class="input-group-prepend">
                               <span class="input-group-text" id="s_lang-pre">Grade</span>
                             </div>
-                            <input type="text" class="form-control col-2 spr" id="s_gradeCode" value="">
+                            <input type="text" class="form-control col-2 spr stuEdit"  id="s_gradeCode" value="">
                           </div>
 
                         </div>

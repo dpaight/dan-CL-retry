@@ -5,6 +5,15 @@ function allPupilsSheet() {
   var ss2 = SpreadsheetApp.openById("1HoulMp8RlpCxvN4qf10TbxW1vzxzTjbA8xKhFjRdZY8");
   return ss2;
 }
+function doGet(e) {
+  ss.getSheetByName('roster').sort(2);
+  ss.getSheetByName('logRespMerged').sort(1);
+  var t = HtmlService.createTemplateFromFile("caseLog");
+  t.version = "v4.0";
+  return t.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME)
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
 function findWinningSeries() {
 }
 function trimSS() {
@@ -92,15 +101,10 @@ function sendLevelsForm(stuName, stuId, teachemail) {
 // }
 
 
-function doGet(e) {
-  ss.getSheetByName('roster').sort(2);
-  ss.getSheetByName('logRespMerged').sort(1);
-  var t = HtmlService.createTemplateFromFile("caseLog");
-  t.version = "v3.6";
-  return t.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
 function getScriptURL() {
-  return ScriptApp.getService().getUrl();
+
+  Logger.log('script url = %s', ScriptApp.getService().getUrl());
+  return ScriptApp.getService().getUrl().toString();
 }
 function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('roster_seis');
@@ -1345,6 +1349,7 @@ function updateLogForm() {
   var form = FormApp.openById('1t9mAS03Kq5C8PkHiCoD47fVGc9c5E_5gnwk4NENJGl4');
   var items = form.getItems();
   items[0].asListItem().setChoiceValues(values);
+  return ScriptApp.getService().getUrl();
 }
 /**
  *
@@ -1597,12 +1602,12 @@ function parseClassListReport() {
   // parses the Aeries report entitled 'class list by section'
   // creates a table from which the lookForTeachers function builds a list of
   // teacher email addresses (useful for calendar invites)
-  
+
 
   // var file = SpreadsheetApp.openById('1F52KzT7GyHnOzj8Nf2rb44rvdb-orx7bjm_61FUqaQc');
   // var sheet = file.getSheetByName('Sheet1');
   // var range = sheet.getRange('A1:Z');
-  var values = values =  parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "aeries class list by section.csv")
+  var values = values = parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "aeries class list by section.csv")
 
   var row = [];
   var parsed = [["teachName", "teachEmail", "Student ID", "studentName"]];
@@ -1641,6 +1646,25 @@ function parseClassListReport() {
   var drange = dest.getRange(1, 1, parsed.length, parsed[0].length);
   drange.setValues(parsed);
 }
+
+function getStuFolder(fname, lname) {
+  fname = fname.toLowerCase();   
+  lname = lname.toLowerCase();   
+  var parentFolder = DriveApp.getFolderById("0B3J9971qOaVIUUlCWXRCbTNjcUE");
+  var folders = parentFolder.getFolders();
+  while (folders.hasNext()) {
+    var folder = folders.next();
+    var folderName = folder.getName().toLowerCase();
+    if (folderName.search(fname) > -1 && folderName.search(lname) > -1) {
+      var url = folder.getUrl();
+      return url;
+    }
+  }
+  var newFolder = parentFolder.createFolder(fname + " " + lname);
+  return newFolder.getUrl();
+}
+
+
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
