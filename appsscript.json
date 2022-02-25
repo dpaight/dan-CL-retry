@@ -1,6 +1,7 @@
 {
   "timeZone": "America/Los_Angeles",
   "dependencies": {
+<<<<<<< HEAD
     "enabledAdvancedServices": [
       {
         "userSymbol": "Tasks",
@@ -30,12 +31,33 @@
         "version": "9"
       }
     ]
+=======
+    "enabledAdvancedServices": [{
+      "userSymbol": "Tasks",
+      "serviceId": "tasks",
+      "version": "v1"
+    }, {
+      "userSymbol": "Calendar",
+      "serviceId": "calendar",
+      "version": "v3"
+    }, {
+      "userSymbol": "Drive",
+      "serviceId": "drive",
+      "version": "v2"
+    }],
+    "libraries": [{
+      "userSymbol": "Moment",
+      "libraryId": "15hgNOjKHUG4UtyZl9clqBbl23sDvWMS8pfDJOyIapZk5RBqwL3i-rlCo",
+      "version": "9"
+    }]
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
   },
   "webapp": {
-    "executeAs": "USER_DEPLOYING",
-    "access": "MYSELF"
+    "access": "MYSELF",
+    "executeAs": "USER_DEPLOYING"
   },
   "exceptionLogging": "STACKDRIVER",
+<<<<<<< HEAD
   "oauthScopes": [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/spreadsheets.readonly",
@@ -56,5 +78,14 @@
         "defaultShortcut": "Ctrl+Alt+Shift+1"
       }
     ]
+=======
+  "oauthScopes": ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/spreadsheets.readonly", "https://www.googleapis.com/auth/spreadsheets.currentonly", "https://www.googleapis.com/auth/gmail.addons.current.action.compose", "https://www.googleapis.com/auth/drive.readonly", "https://www.googleapis.com/auth/drive", "https://www.googleapis.com/auth/forms", "https://www.googleapis.com/auth/documents"],
+  "runtimeVersion": "V8",
+  "sheets": {
+    "macros": [{
+      "menuName": "makeInstructionalNotesFiles",
+      "functionName": "makeInstructionalNotesFiles"
+    }]
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
   }
 }

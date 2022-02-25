@@ -14,6 +14,15 @@ function doGet(e) {
     return t.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
+function doGet(e) {
+  ss.getSheetByName('roster').sort(2);
+  ss.getSheetByName('logRespMerged').sort(1);
+  var t = HtmlService.createTemplateFromFile("caseLog");
+  t.version = "v4.0";
+  return t.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME)
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
 function findWinningSeries() {
 }
 function trimSS() {
@@ -104,9 +113,18 @@ function sendLevelsForm(stuName = "johnny", stuId = "1234567", teachemail = "dpa
 //         .setProperty('lastId', id.toString());
 //     return id;
 // }
+<<<<<<< HEAD
 function getScriptURL() {
     Logger.log('script url = %s', ScriptApp.getService().getUrl());
     return ScriptApp.getService().getUrl().toString();
+=======
+
+
+function getScriptURL() {
+
+  Logger.log('script url = %s', ScriptApp.getService().getUrl());
+  return ScriptApp.getService().getUrl().toString();
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
 }
 function doPost(e) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('roster_seis');
@@ -1341,6 +1359,7 @@ function saveEditedLogEntry(obj) {
     return obj;
 }
 function updateLogForm() {
+<<<<<<< HEAD
     var [allheadings, allvalues, allsheet, allrange, alllastR, alllastC] = get('roster');
     var [headings, values, sheet, range, lastR, lastC] = get('roster', allheadings.indexOf('nmjdob') + 1, true);
     values.shift();
@@ -1349,6 +1368,17 @@ function updateLogForm() {
     var items = form.getItems();
     items[0].asListItem().setChoiceValues(values);
     return ScriptApp.getService().getUrl();
+=======
+
+  var [allheadings, allvalues, allsheet, allrange, alllastR, alllastC] = get('roster');
+  var [headings, values, sheet, range, lastR, lastC] = get('roster', allheadings.indexOf('nmjdob') + 1, true);
+  values.shift();
+  Logger.log('nmjdob array = %s', JSON.stringify(values));
+  var form = FormApp.openById('1t9mAS03Kq5C8PkHiCoD47fVGc9c5E_5gnwk4NENJGl4');
+  var items = form.getItems();
+  items[0].asListItem().setChoiceValues(values);
+  return ScriptApp.getService().getUrl();
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
 }
 /**
  *
@@ -1598,6 +1628,7 @@ function getNotes(data) {
     }
 }
 function parseClassListReport() {
+<<<<<<< HEAD
     // parses the Aeries report entitled 'class list by section'
     // creates a table from which the lookForTeachers function builds a list of
     // teacher email addresses (useful for calendar invites)
@@ -1708,6 +1739,127 @@ function makeInstructionalNotesFiles() {
     }
 }
 //# sourceMappingURL=module.jsx.map
+=======
+  // parses the Aeries report entitled 'class list by section'
+  // creates a table from which the lookForTeachers function builds a list of
+  // teacher email addresses (useful for calendar invites)
+
+
+  // var file = SpreadsheetApp.openById('1F52KzT7GyHnOzj8Nf2rb44rvdb-orx7bjm_61FUqaQc');
+  // var sheet = file.getSheetByName('Sheet1');
+  // var range = sheet.getRange('A1:Z');
+  var values = values = parseCSV("1CZK4YhSS3uiihM-7D-m3sgZWVATWfBK0", "aeries class list by section.csv")
+
+  var row = [];
+  var parsed = [["teachName", "teachEmail", "Student ID", "studentName"]];
+
+  var [theadings, tvalues, tsheet, trange, lastR, lastC] = get('teacherCodes', 2, true);
+  var [alltheadings, alltvalues, alltsheet, alltrange, alllastR, alllastC] = get('teacherCodes');
+
+  var teachers = tvalues.map(function (x) {
+    return x.toString().replace(/^Teacher: ([A-z]*)/g, "$1");
+  })
+
+  for (let i = 0; i < values.length; i++) {
+    const el = values[i];
+    if (el[0].toString().indexOf('Teacher') == 0) {
+      try {
+        var thisTeacher = el[0].toString().replace(/^Teacher: ([A-z]*)/g, "$1");
+        var tIndx = teachers.indexOf(thisTeacher) - 1;
+        var thisTeacherEmail = alltvalues[tIndx][4];
+      } catch (error) {
+        Logger.log('error: %s, %s, %s', error, thisTeacher, thisTeacherEmail);
+      }
+      var counter = i + 2;
+
+      while (values[counter][0].toString().search(/\d{6}/) !== -1) {
+        const student = values[counter];
+        row.push(thisTeacher, thisTeacherEmail, student[0], student[1]);
+        parsed.push(row);
+        row = [];
+        counter++;
+      }
+      row = [];
+      i = counter + 1;
+    }
+  }
+  var dest = ss.getSheetByName('coursesTeachers');
+  var drange = dest.getRange(1, 1, parsed.length, parsed[0].length);
+  drange.setValues(parsed);
+}
+
+function getStuFolder(fname = "Jeremiah", lname = "Harrison") {
+  fname = fname.toLowerCase();
+  lname = lname.toLowerCase();
+  var parentFolder = DriveApp.getFolderById("0B3J9971qOaVIUUlCWXRCbTNjcUE");
+  var folders = parentFolder.getFolders();
+  while (folders.hasNext()) {
+    var folder = folders.next();
+    var folderName = folder.getName().toLowerCase();
+    if (folderName.search(fname) > -1 && folderName.search(lname) > -1) {
+      var url = folder.getUrl();
+      // check for presence of instructional notes
+      var iepRelFiles = folder.getFiles();
+      var instrntsPresent = 0
+      while (iepRelFiles.hasNext()) {
+        var iepFile = iepRelFiles.next();
+        var iepFileName = iepFile.getName().toLocaleLowerCase();
+        if (iepFileName.search('instrnotes') > -1) {
+          instrntsPresent = 1;
+          break;
+        }
+        instrntsPresent = 0;
+      }
+      if (instrntsPresent == 0) {
+        var instrNotes = DriveApp.getFolderById("13cZ2z5gmxNfTU_N2ko14XYQ9vPD_Ju0d");
+        var instrNotesFiles = instrNotes.getFiles();
+        while (instrNotesFiles.hasNext()) {
+          var instrNotesFile = instrNotesFiles.next();
+          var instrNotesFileName = instrNotesFile.getName().toLowerCase();
+          if (instrNotesFileName.search(fname) > -1 && instrNotesFileName.search(lname) > -1) {
+            var instrNotesFileID = instrNotesFile.getId();
+            var shortcut = DriveApp.createShortcut(instrNotesFileID);
+            folder.addFile(shortcut);
+            break;
+          }
+        }
+      }
+      return url;
+    }
+  }
+  var newFolder = parentFolder.createFolder(fname + " " + lname);
+  return newFolder.getUrl();
+}
+function makeInstructionalNotesFiles() {
+  var [headings, values, sheet, range, lastR, lastC] = get('roster');
+
+  for (let i = 0; i < values.length; i++) {
+    const el = values[i];
+    var instrntsPresent = 0;
+    var fname = el[2];
+    var lname = el[1];
+    var instrNotes = DriveApp.getFolderById("13cZ2z5gmxNfTU_N2ko14XYQ9vPD_Ju0d");
+    var instrNotesFiles = instrNotes.getFiles();
+    while (instrNotesFiles.hasNext()) {
+      var instrNotesFile = instrNotesFiles.next();
+      var instrNotesFileName = instrNotesFile.getName().toLowerCase();
+      if (instrNotesFileName.search(fname) > -1 && instrNotesFileName.search(lname) > -1) {
+        // file found; 
+        instrntsPresent = 1;
+        break;
+      }
+    }
+    if (instrntsPresent == 0) {
+      var newDoc = DocumentApp.create(fname + " " + lname + " " + "instrnotes");
+      var newDocID = newDoc.getId();
+      var newDocFile = DriveApp.getFileById(newDocID);
+      newDocFile.moveTo(instrNotes);
+    }
+  }
+}
+
+
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map

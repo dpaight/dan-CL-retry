@@ -4,8 +4,16 @@
 function updateRoster() {
     // get seis data
     // get seis data
+<<<<<<< HEAD
     var seisValues = parseCSV("1DLxHwR7QlDloES0RCAkuN2bBawdAaAp9", "roster_seis.csv");
     var seisHeadings_1 = seisValues.shift();
+=======
+
+    var seisValues = parseCSV("1DLxHwR7QlDloES0RCAkuN2bBawdAaAp9", "roster_seis.csv");
+
+    var seisHeadings_1 = seisValues.shift();
+
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
     var [headings, values, sheet, range, lastR, lastC] = get('roster_seis');
     var seisHeadings = seisHeadings_1.map(function (x, n, arr) {
         return x.replace(/[^A-z^0-9+]/ig, "_").toLowerCase();
@@ -129,6 +137,10 @@ function getAeriesData() {
         .getRange(2, 1, values.length, values[0].length);
     destR.setValues(values);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
 function updateContactInfo(seisId, fldNm, fieldVal) {
     var [headings, values, sheet, range, lastR, lastC] = get('roster');
     var data = [];
@@ -159,14 +171,24 @@ function updateContactInfo(seisId, fldNm, fieldVal) {
                 SpreadsheetApp.flush();
                 Logger.log('data = %s', JSON.stringify(data));
                 return data;
+<<<<<<< HEAD
             }
             catch (error) {
+=======
+
+            } catch (error) {
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
                 alert(error);
                 return false;
             }
         }
     }
+<<<<<<< HEAD
 }
 //# sourceMappingURL=module.jsx.map
+=======
+
+}
+>>>>>>> 88552c94aa74c4e338304b7172611eb292a86b48
 //# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map
