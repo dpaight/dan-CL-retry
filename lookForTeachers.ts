@@ -1,4 +1,5 @@
-function lookForTeachers(id, refresh:boolean) {
+// Compiled using dan-cl-retry 1.0.0 (TypeScript 4.5.4)
+function lookForTeachers(id, refresh) {
     if (refresh) {
         parseClassListReport();
     }
@@ -8,7 +9,6 @@ function lookForTeachers(id, refresh:boolean) {
     var seisIdIdx = rost_headings.indexOf('seis_id');
     var husdIdIdx = rost_headings.indexOf('student_id');
     var foundCodes = [];
-    
     var teachersInfo = "Current teachers: ";
     // "teachName", "teachEmail", "Student ID", "studentName"
     var tnIdx = c_headings.indexOf('teachName');
@@ -28,9 +28,7 @@ function lookForTeachers(id, refresh:boolean) {
             }
         }
     }
-
     // Logger.log('the gathered codes: %s', teachersInfo);
-
     // var newEntry = putTeachersSetCell([id, teachersInfo]);
     foundCodes = [];
     return teachersInfo;
@@ -55,8 +53,8 @@ function putTeachersSetCell(array) {
             var existing = range.getValue();
             if (existing.toString().indexOf("<< ") == -1) {
                 var newEntry = existing.toString() + "<< " + teachersInfo + " >>";
-
-            } else {
+            }
+            else {
                 newEntry = existing.toString().replace(/<< .* >>/g, "<< " + teachersInfo + " >>");
             }
             range.setValue(newEntry);
@@ -64,3 +62,4 @@ function putTeachersSetCell(array) {
     }
     return newEntry;
 }
+//# sourceMappingURL=module.jsx.map

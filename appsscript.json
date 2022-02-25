@@ -16,6 +16,11 @@
         "userSymbol": "Drive",
         "serviceId": "drive",
         "version": "v2"
+      },
+      {
+        "userSymbol": "Gmail",
+        "version": "v1",
+        "serviceId": "gmail"
       }
     ],
     "libraries": [
@@ -31,7 +36,6 @@
     "access": "MYSELF"
   },
   "exceptionLogging": "STACKDRIVER",
-  "runtimeVersion": "V8",
   "oauthScopes": [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/spreadsheets.readonly",
@@ -40,6 +44,17 @@
     "https://www.googleapis.com/auth/drive.readonly",
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/forms",
-    "https://www.googleapis.com/auth/documents"
-  ]
+    "https://www.googleapis.com/auth/documents",
+    "https://www.googleapis.com/auth/script.send_mail"
+  ],
+  "runtimeVersion": "V8",
+  "sheets": {
+    "macros": [
+      {
+        "menuName": "makeInstructionalNotesFiles",
+        "functionName": "makeInstructionalNotesFiles",
+        "defaultShortcut": "Ctrl+Alt+Shift+1"
+      }
+    ]
+  }
 }

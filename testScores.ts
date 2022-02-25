@@ -1,3 +1,4 @@
+// Compiled using dan-cl-retry 1.0.0 (TypeScript 4.5.4)
 function importXLS(fName, sheetName) {
     fName = "testScores.xlsx";
     sheetName = "testScores";
@@ -79,9 +80,9 @@ function convertExcel2Sheets(excelFile, filename, arrParents) {
     return SpreadsheetApp.openById(fileDataResponse.id);
 }
 /**
- * 
+ *
  * @param id // the aeries id
- * @return 
+ * @return
  */
 function getTestScores(id = "155051") {
     var sheet, range, values;
@@ -92,15 +93,12 @@ function getTestScores(id = "155051") {
         return x.toString().replace(/([A-z0-9^]+)/g, "$1").replace(/[ \/]/g, "_").replace(/class/g, "klass").toLowerCase();
     });
     // values.unshift(allTestHeadings);
-
     var Codes = {
-        mapPart:
-        {
+        mapPart: {
             "1": "reading",
             "20": "math"
         },
-        elpacPart:
-        {
+        elpacPart: {
             "0": "Eng Lang. Prof.Assessm.California",
             "1": "Oral Language",
             "2": "Written Language",
@@ -113,11 +111,9 @@ function getTestScores(id = "155051") {
     var m = Codes.mapPart;
     var e = Codes.elpacPart;
     Logger.log('map: %s, %s; elpac: %s, %s, %s, %s, %s, %s, %s', m[1], m[20], e[0], e[1], e[2], e[3], e[4], e[5], e[6]);
-
     var theseHeadings = [
         "student_id", "map_0_date.reading", "map_0_part.reading", "map_0_ss.reading", "map_0_pct.reading", "map_1_date.reading", "map_1_part.reading", "map_1_ss.reading", "map_1_pct.reading", "map_0_date.math", "map_0_part.math", "map_0_ss.math", "map_0_pct.math", "map_1_date.math", "map_1_part.math", "map_1_ss.math", "map_1_pct.math", "elpacAll_part", "elpacAll_prof", "elpac1_part", "elpac1_prof", "elpac2_part", "elpac2_prof", "elpac3_part", "elpac3_prof", "elpac4_part", "elpac4_prof", "elpac5_part", "elpac5_prof", "elpac6_part", "elpac6_prof", "sri_0_date", "sri_0_ss", "sri_0_pct"
     ];
-
     var scores = {
         "elpacRpt": {
             "date": "",
@@ -138,13 +134,11 @@ function getTestScores(id = "155051") {
             "20": ["", "", "", "", "", ""]
         },
         "sri": []
-    }
+    };
     var row = [];
     for (let i = 0; i < values.length; i++) {
         const el = values[i];
-        const [
-            student_id, last_name, first_name, testid, part, grade, mo_yr, klass, r_s, s_s, g_e, pct, other, sta9, crv, date_taken, percent, performlvl, rubric, type, lexile
-        ] = el;
+        const [student_id, last_name, first_name, testid, part, grade, mo_yr, klass, r_s, s_s, g_e, pct, other, sta9, crv, date_taken, percent, performlvl, rubric, type, lexile] = el;
         var tDtIdx = el[theseHeadings.indexOf("Date Taken")];
         if (student_id == id) {
             row.push(student_id);
@@ -154,31 +148,32 @@ function getTestScores(id = "155051") {
                         scores.mapRpt0[1] = scores.mapRpt1[1];
                         scores.mapRpt1[1] = [testid, m[1], s_s, pct, date_taken];
                     }
-                } else if (part == 20) {
+                }
+                else if (part == 20) {
                     if (scores.mapRpt1[20][4] == "" || moment(date_taken, "MM/DD/YYYY").isAfter(moment(scores.mapRpt1[20][4], "MM/DD/YYYY"))) {
                         scores.mapRpt0[20] = scores.mapRpt1[20];
                         scores.mapRpt1[20] = [testid, m[20], s_s, pct, date_taken];
                     }
                 }
-            } else if (testid == "ELPAC") {
+            }
+            else if (testid == "ELPAC") {
                 if (scores.elpacRpt[part] == undefined || moment(date_taken, "MM/DD/YYYY").isAfter(moment(scores.elpacRpt[part], "MM/DD/YYYY"))) {
                     scores.elpacRpt[part] = [date_taken, e[part], performlvl];
                 }
-
-            } else if (testid == "SRI") {
+            }
+            else if (testid == "SRI") {
                 if (scores.sri[4] == undefined || moment(date_taken, "MM/DD/YYYY").isAfter(moment(scores.sri[4], "MM/DD/YYYY"))) {
                     scores.sri = [date_taken, s_s, pct];
                 }
             }
         }
     }
-
     Logger.log('scores obj: %s', JSON.stringify(scores));
     return scores;
 }
 function doSomething(scores) {
     var row = [];
-    row.push(...scores)
+    row.push(...scores);
     var ep = scores.elpacRpt;
     // row.push(scores.elpacRpt[0][0], ep[0][1], ep[1][1], ep[1][2], ep[1][3]);
     for (const key in scores) {
@@ -189,9 +184,9 @@ function doSomething(scores) {
     }
     Logger.log(JSON.stringify(scores));
     Logger.log(JSON.stringify(row));
-
 }
 // for (let i = 0; i < element.length; i++) {
 //     const item = element[i];
 //     row.push(item);
 // }
+//# sourceMappingURL=module.jsx.map

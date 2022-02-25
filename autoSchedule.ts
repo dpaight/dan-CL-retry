@@ -1,3 +1,4 @@
+// Compiled using dan-cl-retry 1.0.0 (TypeScript 4.5.4)
 function getMembers(grpId) {
     // grpId = 'B';
     grpId = grpId.toString().toLowerCase();
@@ -40,12 +41,10 @@ function formatSchedule() {
 }
 function getGroups() {
     var [headings, values, sheet, range, lastR, lastC] = get('groups');
-
     var ids = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
     var grpsObj = {};
     for (let i = 0; i < values.length; i++) {
         const el = values[i];
-
         grpsObj[ids[i].toString()] = new Group(el[0], el[1], el[2], el[3], el[4], el[5], el[6]);
     }
     return grpsObj;
@@ -93,11 +92,10 @@ function Group(grpId, start, end, length, days, topics, topicsDescr) {
     this.topics = topics;
     this.topicsDescr = topicsDescr;
 }
-
 function getLetter(n) {
     n = n.toLowerCase();
     var a = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
     return a[n];
 }
-  
+//# sourceMappingURL=module.jsx.map
 //# sourceMappingURL=module.jsx.map

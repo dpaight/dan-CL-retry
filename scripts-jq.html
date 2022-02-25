@@ -1,0 +1,344 @@
+<script>
+    // The code in this function runs when the page is loaded.
+    $(document).ready(function () {
+        // click student name in roster table switches to that student for both contact info and
+        // log entries
+        google.script.run
+        .withSuccessHandler(contactInfo)
+        .getFirstPointer();
+
+        $("body").on("click tap", ".setStudent", function (event) {
+            event.preventDefault();
+            var id = $(this).attr("data-stuId");
+            //       console.log('id = %s', id);
+            focus(id);
+        });
+
+        $("#ready").hide();
+        $(".pleaseHide").hide();
+        // document.body.style.cursor = "wait";
+
+        $("td[data-stuId|='1010101']").css("color", "light-yellow");
+
+        $("body").on("dblclick dbl-tap", ".goalList", function (e) {
+            // console.log('event triggered a[name=goalList clicked');
+            e.preventDefault();
+            // open goal for editing
+            // console.log('this is %s', JSON.stringify($(this).text()));
+            var thisGoal = JSON.parse($(this).text());
+            var gId = parseInt(thisGoal[thisGoal.length - 1], 10);
+            // console.log('gId = %s', gId);
+            google.script.run
+                .withSuccessHandler(editGoalInModal)
+                .getGoal(gId);
+        });
+        // console.log('sent to goal edit: %s', $(this).text());
+        $("body").on("click", ".goalList", function (e) {
+            // console.log('put the goal number into a gl field');
+            if (e.shiftKey) {
+                var item = JSON.parse($(this).text());
+                var gId = item[item.length - 1]
+                // item = item.toString().match(/\d+$/);
+
+                $("input[name='gls']").each(function (i, el) {
+                    if ($(this).val() == "") {
+                        $(this).val(gId);
+                        $(this).attr("title", gId);
+                        return false;
+                    }
+                });
+                var crntScrl = $(window).scrollTop();
+            }
+        });
+
+        // shift-click clears a litte goal number box
+        // click builds text blaze snippet from data in table
+        $("body").on("click", "input[name=gls]", function (event) {
+            if (event.shiftKey) {
+                $(this).val("");
+                $(this).attr("title", "");
+            } else {
+                var id = $('#seis_id').val();
+                var gId = $(this).val();
+                google.script.run
+                    .withSuccessHandler(showTBsnippetGl)
+                    .getOneGoalForEditing(gId);
+            }
+        });
+
+        // $("body").on("click", "#emParentsMenuItem", emParents());
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+        // console.log('gSmL is %s', gSmL);
+
+        $("body").on("click", "#gVoiceMenuItem", function () { firstSnipThenGvoice() });
+        $(".alert").alert();
+
+        //set cursor to pointer when entering a nav item
+        $("body").on("mouseenter", ".nav-link", function () {
+            $(this).css("cursor", "pointer");
+        });
+
+        // set cursor to pointer when entering table row
+        $("body").on("mouseenter", ".setStudent", function () {
+            $(".setStudent").css("cursor", "pointer");
+        });
+
+        //set cursor to pointer when entering an icon
+        $("body").on("mouseenter", ".material-icons", function () {
+            $(".setStudent").css("cursor", "pointer");
+        });
+
+        // set cursor to normal when leaving an icon
+        $("body").on("mouseleave", ".material-icons", function () {
+            $(".setStudent").css("cursor", "default");
+        });
+
+
+        // modals
+        $("body").on("show.srchModal.modal", function () {
+
+        });
+
+        $("body").on("show.bs.modal", function () {
+            // alert('event');
+            var addresses = ($("#teachemail").val() + ',' + $("#Parent_1_Email").val() + ',' + $("#u3_Parent_1a_Email").val()).replace(/,$/, "");
+            var subject = $("#stuName").val();
+            // console.log(addresses);
+            $("#emailRecipients").val(addresses);
+            $("#emailSubject").val(subject);
+        });
+        // change the cursor to a pointer when entering a text Blaze field
+        $("body").on("mouseenter", '[name$="Copy"]', function () {
+            $("[name$='Copy']").css("cursor", "pointer");
+        });
+
+        // if shift key is down turning the cursor into a trash can and then delete on click (next function)
+        $("body").on("mousemove", "input[name='gls']", function () {
+            if (event.shiftKey) {
+                $("input[name='gls'").css("cursor", "url(https://drive.google.com/uc?export=view&id=1HSHKH6IvS3mfL0wsINR73RrvAWR-7uB_), auto");
+            } else {
+                $("input[name='gls'").css("cursor", "pointer");
+            }
+        });
+
+        $("body").on("click", ".snipThis", function (event) {
+            event.preventDefault();
+            snipInfo();
+        });
+        $(".btn").mouseup(function () {
+            $(this).blur();
+        });
+        // copy a text blaze snippet to clipboard when clicking on the item
+        $("body").on("click", '[name$="Copy"]', function () {
+            $(this).select();
+            document.execCommand('copy');
+        });
+        $(".btn-success").click(function () {
+            $(this).toggleClass("btn-active").siblings().removeClass("btn-active");
+            $(this).blur();
+        });
+        // when clicking on a table row, change the color of the field
+        $("body").on("mousedown", ".setStudent", function (event) {
+            event.preventDefault();
+            $(this).css("background-color", "#5bf5db");
+            // console.log('mouse down');
+        });
+
+        // this goes with the one just above changing the color back to White
+        $("body").on("mouseup", ".setStudent", function (event) {
+            event.preventDefault();
+            $(this).css("background-color", "#ffffff");
+            // console.log('mouse up');
+        });
+
+        // record edited fields 
+        $("body").on("change", ".stuEdit", function () {
+            var seisId = $("#seis_id").val();
+            var fieldVal = $(this).val();
+            var fldNm = $(this).attr("data-fldNm");
+
+            if (!seisId || !fieldVal || !fldNm) {
+                alert("missing data in html");
+                return;
+            }
+            // sessionStorage.removeItem('rec' + seisId);
+            // alert('rec' + seisId + ", " + seisId + ", " + fieldVal + ", " + fldNm);
+            if (fldNm.toString().search(/date/g) > -1) {
+                fieldVal = fieldVal.toString().replace(/-/g, "/");
+                $(this).val(fieldVal);
+            }
+            google.script.run
+                .withSuccessHandler(updateLocalStorage)
+                .updateContactInfo(seisId, fldNm, fieldVal);
+
+            setTimeout(() => {
+                google.script.run
+                    .withSuccessHandler(showRosterTable)
+                    .getTableData_roster();
+            }, 3000);
+
+        });
+
+        $("body").on("change", ".logWindow", function () {
+            filterLogEntriesByDateWindow()
+        });
+        //save changes to spreadsheet
+        $("body").on("change", "#notes2", function (event) {
+            var id = $("#seis_id").val();
+            var field = $(this).attr("id");
+            var value = $(this).val();
+
+            console.log('id = %s, field = %s, value = %s', id, field, value);
+            google.script.run
+                .withSuccessHandler(showNotes) // works with returned values: id, index, value
+                .getNotes([id, value]);
+        });
+        function updateLocalStorage(array) {
+            var cachedRecString = sessionStorage.getItem('rec' + array[0][0].toString());
+            console.log('id = %s', JSON.stringify(array[0]));
+            var cachedRecord = JSON.parse(sessionStorage.getItem('rec' + array[0][0].toString()));
+            for (let i = 0; i < array.length; i++) {
+                const el = array[i];
+                var [id, index, value] = el;
+                console.log('el = %s', JSON.stringify(el));
+                cachedRecord.splice(index, 1, value);
+            }
+            console.log('stored: %s', JSON.stringify(cachedRecord));
+            sessionStorage.setItem('rec' + id, JSON.stringify(cachedRecord));
+
+            $("#loc00tb").empty();
+            google.script.run
+                .withSuccessHandler(showRosterTable)
+                .getTableData_roster();
+
+            // google.script.run
+            //   .withSuccessHandler(showContactInfo)
+            //   .getRecord(id);
+        }
+
+        // save all data in changeable fields in the  spreadsheet
+        $("body").on("click", ".saveEntryBtn", function (event) {
+            event.preventDefault();
+            document.body.style.cursor = "wait";
+
+            var entry = $("#logEntry").val();
+            var id = $("#seis_id").val();
+            var nmjdob = $("#nmjdob").val();
+            if (entry.length > 0) {
+                $("html,body").css("cursor", "wait");
+                // console.log('id and entry are %s and %s', id, entry);
+                console.log('saving: %s, %s, %s', id, entry, nmjdob);
+                google.script.run
+                    .withSuccessHandler(updateLogEntryCache)
+                    .saveLogEntry([id, entry, nmjdob]);
+            }
+            document.body.style.cursor = "default";
+            $("#logEntry").val('');
+        });
+        $("body").on("keypress", ".saveEntryBtn", function (event) {
+
+            $(this).addClass("active");
+            event.preventDefault();
+            document.body.style.cursor = "wait";
+
+            var entry = $("#logEntry").val().toString().replace(/\n/g, "->");
+            console.log('entry is %s', entry);
+            var id = $("#seis_id").val();
+            var nmjdob = $("#nmjdob").val();
+            if (entry.length > 0) {
+                $("html,body").css("cursor", "wait");
+                // console.log('id and entry are %s and %s', id, entry);
+                google.script.run
+                    .withSuccessHandler(updateLogEntryCache)
+                    .saveLogEntry([id, entry, nmjdob]);
+            }
+            document.body.style.cursor = "default";
+            $(this).removeClass("active");
+            $("#logEntry").val('');
+        });
+        // turn the color of the button back to green without doing anything
+        $("body").on("click", "#cancelEntryBtn", function (event) {
+            event.preventDefault();
+            $("#saveEntry").attr("class", "btn btn-sm btn-success my-1 svChngs");
+        });
+
+
+        // click builds text blaze snippet from data in table 
+        $("body").on("click", "#getIEPcompForm", function (event) {
+            var flName = $("#stuName").val("");
+            var fn = flName.replace(/([A-z]+)( .*)/g, "$1");
+            var ln = flName.replace(/([A-z]+ )(.*)/g, "$2");
+            var dob = $("#dob").val("");
+
+            document.execCommand('copy');
+
+            $(this).attr("title", "");
+
+            var gId = $(this).val();
+            google.script.run
+                .withSuccessHandler(showTBsnippetGl)
+                .getGoal(gId);
+        });
+
+        // retrieves data from a seis generated csv file (seis search report)
+        $("body").on("click", "#seis_roster", function (event) {
+            event.preventDefault();
+            document.body.style.cursor = "wait";
+            var id = $("#seis_id").val();
+            google.script.run
+                .withSuccessHandler(reloadMe)
+                .updateRoster();
+            setTimeout(() => {
+                "google.script.run.updateLogForm();"
+            }, 15000);
+
+        });
+        $("body").on("click", "#sendLevelsButton", function () {
+            console.log('send levels button clicked');
+            var id = $("#seis_id").val();
+            var stuName = $("#stuName").val();
+            var teachemail = $("#teachemail").val();
+            // console.log("sendPFLQToTchr() fired; running server script with params: " + stuName + "; " + id + "; " + tem);
+            google.script.run
+                .withSuccessHandler(contactInfo)
+                .sendLevelsForm(stuName, id, "dpaight@hemetusd.org");
+        });
+
+        $("body").on("mouseenter", ".logEntry", function () {
+            $(this).css("cursor", "pointer");
+        });
+
+        $("body").on("dblclick", ".logEntry", function (e) {
+            // console.log('event triggered a[name=goalList clicked');
+            e.preventDefault();
+            // open goal for editing
+            var log_entry_id = $(this).data("entry_id");
+            //       console.log('log entry id is %s', log_entry_id);
+            google.script.run
+                .withSuccessHandler(editLogEntryInModal)
+                .getLogEntry(log_entry_id);
+        });
+        $(".logEntry").bind("taphold", function (e) {
+            // console.log('event triggered a[name=goalList clicked');
+            e.preventDefault();
+            // open goal for editing
+            var log_entry_id = $(this).data("entry_id");
+            //       console.log('log entry id is %s', log_entry_id);
+            google.script.run
+                .withSuccessHandler(editLogEntryInModal)
+                .getLogEntry(log_entry_id);
+        });
+
+        $("body").on("click", ".sendEmail", function () {
+            //       console.log('seis_id is ', $("#seis_id").val());
+            var emadr = $("#teach_email").val();
+            //       console.log('email address is: %s', emadr);
+
+        });
+        startup();
+    });
+
+</script>
